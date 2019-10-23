@@ -1,0 +1,7 @@
+{
+    "extends": "gts/tslint.json",
+    "rules": {
+        "interface-name": false,
+        "no-any": false
+    }
+}

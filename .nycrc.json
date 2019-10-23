@@ -1,0 +1,20 @@
+{
+    "check-coverage": true,
+    "lines": 95,
+    "branches": 95,
+    "functions": 95,
+    "exclude": [
+        "**/*.js",
+        "test",
+        "build",
+        "dist"
+    ],
+    "reporter": [
+        "text",
+        "lcov"
+    ],
+    "extension": [
+        ".ts"
+    ],
+    "all": true
+}

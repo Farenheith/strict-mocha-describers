@@ -1,0 +1,39 @@
+{
+  "name": "strict-mocha-describers",
+  "version": "1.0.0",
+  "description": "The implementation of describers strongly oriented to the methods that will be tested",
+  "main": "src/index.js",
+  "directories": {
+    "bin": "build",
+    "test": "test",
+    "lib": "src"
+  },
+  "scripts": {
+    "test": "mocha --require ts-node/register test/**/*.ts",
+    "test:coverage": "nyc npm test",
+    "build": "tsc -p ."
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Farenheith/strict-mocha-describers.git"
+  },
+  "author": "@Farenheith",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/Farenheith/strict-mocha-describers/issues"
+  },
+  "homepage": "https://github.com/Farenheith/strict-mocha-describers#readme",
+  "devDependencies": {
+    "chai": "^4.2.0",
+    "gts": "^1.1.0",
+    "nyc": "^14.1.1",
+    "sinon": "^7.5.0",
+    "sinon-chai": "^3.3.0",
+    "ts-node": "^8.4.1",
+    "tslint": "^5.20.0",
+    "typescript": "^3.6.4"
+  },
+  "dependencies": {
+    "mocha": "^6.2.2"
+  }
+}
