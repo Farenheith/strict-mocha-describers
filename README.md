@@ -1,6 +1,6 @@
 # strict-mocha-describers
 
-**WORK IN PROGRESS
+**WORK IN PROGRESS**
 
 The implementation of describers strongly oriented for the methods that will be tested
 
