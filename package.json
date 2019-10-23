@@ -8,6 +8,9 @@
     "test": "test",
     "lib": "src"
   },
+  "files": [
+    "build/**/*"
+  ],
   "scripts": {
     "test": "mocha --require ts-node/register test/**/*.ts",
     "test:coverage": "nyc npm test",
