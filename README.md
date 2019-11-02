@@ -1,6 +1,6 @@
 # strict-mocha-describers
 
-The implementation of describers strongly oriented for the methods that will be tested
+The implementation of describers and assertions strongly oriented for the methods that will be tested
 
 ## How it works
 
