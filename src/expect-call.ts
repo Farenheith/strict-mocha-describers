@@ -13,7 +13,7 @@ export function expectCall(stub: sinon.SinonStub | any, ...parameters: any[][]) 
         } times.`);
     for (let i = 0; i < parameters.length; i++) {
         expect((stub as sinon.SinonStub).args[i])
-            .eql(parameters[i], `Expected ${
+            .eql(parameters[i], `Expected call #${i} of ${
                 (stub as sinon.SinonStub).name
             } to have been called with [${
                 parameters[i]
