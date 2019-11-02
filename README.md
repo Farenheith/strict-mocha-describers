@@ -4,11 +4,11 @@
 
 The implementation of describers strongly oriented for the methods that will be tested
 
-## how it works
+## How it works
 
 When these describers are used to write your test, all other methods from the class other than the method that will be tested are overwritten by a default error with the message _not mocked yet_. The idea is to enforce that all these calls must be mocked and to make the test always break when some refactoring is made or a new method is called
 
-## available describers
+## Available describers
 
 ### method
 A describer to create the tests of a single method of a instance;
@@ -33,7 +33,7 @@ Same as **method.static**, but will make only the current test to be ran.
 
 Same as **method.static**, but will make the current test to be skipped.
 
-## available assertions
+## Available assertions
 
 ### expectCall
 
