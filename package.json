@@ -27,16 +27,18 @@
   },
   "homepage": "https://github.com/Farenheith/strict-mocha-describers#readme",
   "devDependencies": {
-    "chai": "^4.2.0",
+    "@types/chai": "^4.2.4",
+    "@types/sinon": "^7.5.0",
     "gts": "^1.1.0",
     "nyc": "^14.1.1",
-    "sinon": "^7.5.0",
-    "sinon-chai": "^3.3.0",
     "ts-node": "^8.4.1",
     "tslint": "^5.20.0",
     "typescript": "^3.6.4"
   },
   "dependencies": {
-    "mocha": "^6.2.2"
+    "mocha": "^6.2.2",
+    "chai": "^4.2.0",
+    "sinon": "^7.5.0",
+    "sinon-chai": "^3.3.0"
   }
 }
