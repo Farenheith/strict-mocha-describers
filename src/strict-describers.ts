@@ -1,97 +1,114 @@
-import { describe, beforeEach, afterEach } from 'mocha';
+import * as mocha from 'mocha';
 
-export function prepare<T>(service: any, prototype: any, methodToTest: keyof T) {
-  const methods: string[] = [];
-  const backup: [string, Function][] = [];
-  for (const key of Object.getOwnPropertyNames(prototype)) {
-    if (key !== methodToTest
-      && key !== 'constructor'
-      && typeof prototype[key] === 'function') {
-      methods.push(key);
-    }
-  }
+type ClassOf<T> = new () => T;
 
-  methods.forEach((m) => {
-    backup.push([m, service[m]]);
-    service[m] = () => {
-      throw new Error('Not mocked yet');
-    };
-  });
+export const testUtils = {
+	prepare<T>(service: T, prototype: T, methodToTest: keyof T) {
+		const methods: string[] = [];
+		const backup: Array<[string, Function]> = [];
+		for (const key of Object.getOwnPropertyNames(prototype)) {
+			if (key !== methodToTest
+				&& typeof prototype[key] === 'function'
+				// for instance methods
+				&& ((
+						service !== prototype
+						&& key !== 'constructor'
+				// for static classes
+					) || (
+						service === prototype
+						&& key !== 'apply'
+						&& key !== 'bind'
+						&& key !== 'call'
+						&& key !== 'toString'
+					))) {
+				methods.push(key);
+			}
+		}
+  
+		methods.forEach((m) => {
+			backup.push([m, service[m]]);
+			service[m] = () => {
+				throw new Error('Not mocked yet');
+			};
+		});
+  
+		return backup;
+	},
 
-  return backup;
-}
+	mountTest<T>(service: () => T, prototype: T, methodName: keyof T, callback: () => any) {
+		let backup: Array<[string, Function]>;
+		let target: T;
+  
+		mocha.beforeEach(() => {
+			target = service();
+			backup = testUtils.prepare(target, prototype, methodName);
+		});
 
-function mountTest<T>(service: () => T, cls: any, methodName: keyof T, callback: () => any) {
-  let backup: [string, Function][];
-  let target: T;
+		callback();
 
-  beforeEach(() => {
-    target = service();
-    backup = prepare(target, cls.prototype, methodName);
-  });
-  callback();
-  afterEach(() => {
-    for (const pair of backup) {
-      (target as any)[pair[0]] = pair[1];
-    }
-  });
-}
+		mocha.afterEach(() => {
+			for (const pair of backup) {
+				(target as any)[pair[0]] = pair[1];
+			}
+		});
+	},
+};
 
-function describeMethod<T>(service: () => T, cls: any,
-  methodName: keyof T, callback: () => any,
+export function describeMethod<T>(service: () => T, cls: ClassOf<T>,
+	methodName: keyof T, callback: () => any,
 ) {
-  describe(`Method ${methodName}`, () => mountTest(service, cls, methodName, callback));
+	mocha.describe(`Method ${methodName}`, () => testUtils.mountTest(service, cls.prototype, methodName, callback));
 }
 
-function describeMethodOnly<T>(service: () => T, cls: any,
-  methodName: keyof T, callback: () => any,
+export function describeMethodOnly<T>(service: () => T, cls: ClassOf<T>,
+	methodName: keyof T, callback: () => any,
 ) {
-  describe.only(`Method ${methodName}`, () => mountTest(service, cls, methodName, callback));
+	mocha.describe.only(`Method ${methodName}`, () => testUtils.mountTest(service, cls.prototype, methodName, callback));
 }
 
-function describeMethodSkip<T>(service: () => T, cls: any,
-  methodName: keyof T, callback: () => any,
+export function describeMethodSkip<T>(service: () => T, cls: ClassOf<T>,
+	methodName: keyof T, callback: () => any,
 ) {
-  describe.skip(`Method ${methodName}`, () => mountTest(service, cls, methodName, callback));
+	mocha.describe.skip(`Method ${methodName}`, () => testUtils.mountTest(service, cls.prototype, methodName, callback));
 }
 
-function describeStaticMethod<T>(cls: any,
-  methodName: keyof T, callback: () => any,
+export function describeStaticMethod<T>(cls: T,
+	methodName: keyof T, callback: () => any,
 ) {
-  describe(`Static method ${methodName}`, () => mountTest(() => cls, cls, methodName, callback));
+	mocha.describe(`Static method ${methodName}`, () => testUtils.mountTest(() => cls, cls, methodName, callback));
 }
 
-function describeStaticMethodOnly<T>(cls: any,
-  methodName: keyof T, callback: () => any,
+export function describeStaticMethodOnly<T>(cls: T,
+	methodName: keyof T, callback: () => any,
 ) {
-  describe.only(`Static method ${methodName}`,
-    () => mountTest(() => cls, cls, methodName, callback));
+	mocha.describe.only(`Static method ${methodName}`,
+		() => testUtils.mountTest(() => cls, cls, methodName, callback));
 }
 
-function describeStaticMethodSkip<T>(cls: any,
-  methodName: keyof T, callback: () => any,
+export function describeStaticMethodSkip<T>(cls: T,
+	methodName: keyof T, callback: () => any,
 ) {
-  describe.skip(`Static method ${methodName}`,
-    () => mountTest(() => cls, cls, methodName, callback));
+	mocha.describe.skip(`Static method ${methodName}`,
+		() => testUtils.mountTest(() => cls, cls, methodName, callback));
 }
 
 interface BaseSuiteFunction {
-  <T>(service: () => T, cls: any, title: keyof T, fn: () => any): any;
+	<T>(service: () => T, cls: ClassOf<T>, title: keyof T, fn: () => any): any;
 }
 
 interface BaseStaticSuiteFunction {
-  <T>(cls: any, title: keyof T, fn: () => any): any;
+	<T>(cls: T, title: keyof T, fn: () => any): any;
 }
 
 interface StaticSuiteFunction extends BaseStaticSuiteFunction {
-  only: BaseStaticSuiteFunction;
-  skip: BaseStaticSuiteFunction;
+	only: BaseStaticSuiteFunction;
+	skip: BaseStaticSuiteFunction;
 }
 
 interface SuiteFunction extends BaseSuiteFunction {
-  only: BaseSuiteFunction;
-  skip: BaseSuiteFunction;
-  static: StaticSuiteFunction;
+	only: BaseSuiteFunction;
+	skip: BaseSuiteFunction;
+	static: StaticSuiteFunction;
 }
 
 export const method = describeMethod as SuiteFunction;

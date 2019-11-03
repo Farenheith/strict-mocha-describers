@@ -20,12 +20,12 @@ function prepare(service, prototype, methodToTest) {
     return backup;
 }
 exports.prepare = prepare;
-function mountTest(service, cls, methodName, callback) {
+function mountTest(service, prototype, methodName, callback) {
     let backup;
     let target;
     mocha_1.beforeEach(() => {
         target = service();
-        backup = prepare(target, cls.prototype, methodName);
+        backup = prepare(target, prototype, methodName);
     });
     callback();
     mocha_1.afterEach(() => {
@@ -35,13 +35,13 @@ function mountTest(service, cls, methodName, callback) {
     });
 }
 function describeMethod(service, cls, methodName, callback) {
-    mocha_1.describe(`Method ${methodName}`, () => mountTest(service, cls, methodName, callback));
+    mocha_1.describe(`Method ${methodName}`, () => mountTest(service, cls.prototype, methodName, callback));
 }
 function describeMethodOnly(service, cls, methodName, callback) {
-    mocha_1.describe.only(`Method ${methodName}`, () => mountTest(service, cls, methodName, callback));
+    mocha_1.describe.only(`Method ${methodName}`, () => mountTest(service, cls.prototype, methodName, callback));
 }
 function describeMethodSkip(service, cls, methodName, callback) {
-    mocha_1.describe.skip(`Method ${methodName}`, () => mountTest(service, cls, methodName, callback));
+    mocha_1.describe.skip(`Method ${methodName}`, () => mountTest(service, cls.prototype, methodName, callback));
 }
 function describeStaticMethod(cls, methodName, callback) {
     mocha_1.describe(`Static method ${methodName}`, () => mountTest(() => cls, cls, methodName, callback));

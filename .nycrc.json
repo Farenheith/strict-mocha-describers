@@ -4,10 +4,11 @@
     "branches": 95,
     "functions": 95,
     "exclude": [
-        "**/*.js",
         "test",
         "build",
-        "dist"
+        "coverage",
+        "dist",
+        "**/*.spec.ts"
     ],
     "reporter": [
         "text",

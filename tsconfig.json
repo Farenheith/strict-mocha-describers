@@ -5,7 +5,7 @@
       "outDir": "build",
       "lib": [
         "es2017",
-        "dom"
+        "dom",
       ],
       "moduleResolution": "node",
       "experimentalDecorators": true,

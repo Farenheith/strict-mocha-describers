@@ -5,14 +5,14 @@
   "main": "build/src/index.js",
   "directories": {
     "bin": "build",
-    "test": "test",
+    "test": "src",
     "lib": "src"
   },
   "files": [
     "build/**/*"
   ],
   "scripts": {
-    "test": "mocha --require ts-node/register test/**/*.ts",
+    "test": "mocha --require ts-node/register --recursive \"**/*.spec.ts\"",
     "test:coverage": "nyc npm test",
     "build": "tsc -p ."
   },
@@ -36,8 +36,8 @@
     "typescript": "^3.6.4"
   },
   "dependencies": {
-    "mocha": "^6.2.2",
     "chai": "^4.2.0",
+    "mocha": "^6.2.2",
     "sinon": "^7.5.0",
     "sinon-chai": "^3.3.0"
   }
