@@ -34,23 +34,23 @@ export type StaticTests<ClassTarget> = {
 	[key in keyof ClassTarget]: StaticMethodTestSuite;
 };
 
-export function mountTests<Target, Services>(cls: ClassOf<Target>,
+export function mountTests<Target, ClassTarget extends ClassOf<Target>, Services>(cls: ClassTarget,
 	bootStrapper: () => BootStrapperReturn<Target, Services>,
-	testSuites: TestSuites<Target, Services>,
+	testSuites: TestSuites<Target, ClassTarget, Services>,
 ) {
 	if (testSuites.static) {
 		if (testSuites.static.methods) {
-			mountStaticTests<ClassOf<Target>>(testSuites.static.methods,
+			mountStaticTests<ClassTarget>(testSuites.static.methods,
 				cls, 'Static methods', false);
 		}
 		
 		if (testSuites.static.privateMethods) {
-			mountStaticTests<ClassOf<Target>>(testSuites.static.privateMethods,
+			mountStaticTests<ClassTarget>(testSuites.static.privateMethods,
 				cls, 'Private static methods', true);
 		}
 
 		if (testSuites.static.general) {
-			mountStaticTests<ClassOf<Target>>(testSuites.static.general,
+			mountStaticTests<ClassTarget>(testSuites.static.general,
 				cls, 'General static tests', false);
 		}
 	}
@@ -128,15 +128,15 @@ export function getIt<Target, Services>(getTarget: () => Target, getServices: ()
 	return result;
 }
 
-export function mountTestCase<T>(
-	getTarget: () => T,
-	prototype: T,
-	methodName: keyof T,
+export function mountTestCase(
+	getTarget: () => any,
+	prototype: any,
+	methodName: string,
 	callback: () => any,
 	prepare: boolean,
 ) {
 	let backup: Array<[string, Function]>;
-	let target: T;
+	let target: any;
 
 	beforeEach(() => {
 		target = getTarget();
@@ -157,13 +157,13 @@ export function mountTestCase<T>(
 }
 
 export function mountStaticTests<ClassTarget>(
-	staticTests: StaticTests<ClassTarget>,
+	staticTests: GeneralStaticTests<ClassTarget>,
 	cls: ClassTarget,
 	title: string,
 	prepare: boolean,
 ) {
 	describe(title, () => {
-		for (const method of Object.getOwnPropertyNames(staticTests) as Array<keyof ClassTarget>) {
+		for (const method of Object.getOwnPropertyNames(staticTests)) {
 			const testCase = staticTests[method];
 			const callback = () => mountTestCase(() => cls, cls, method, () => testCase.tests(mochaIt), prepare);
 			switch (testCase.flag) {
@@ -180,16 +180,16 @@ export function mountStaticTests<ClassTarget>(
 	});
 }
 
-export interface TestSuites<Target, Services> {
+export interface TestSuites<Target, ClassTarget extends ClassOf<Target>, Services> {
 	instance?: {
 		methods?: InstanceTests<Target, Services>,
 		privateMethods?: GeneralInstanceTests<Target, Services>,
 		general?: GeneralInstanceTests<Target, Services>,
 	}
 	static?: {
-		methods?: StaticTests<Target>,
-		privateMethods?: GeneralStaticTests<Target>,
-		general?: GeneralStaticTests<Target>,
+		methods?: StaticTests<ClassTarget>,
+		privateMethods?: GeneralStaticTests<ClassTarget>,
+		general?: GeneralStaticTests<ClassTarget>,
 	}
 }
 
@@ -214,31 +214,31 @@ export interface TestSuites<Target, Services> {
 export function describeClass<Target, ClassTarget extends ClassOf<Target>, Services>	(
 	cls: ClassTarget,
 	bootStrapper: () => BootStrapperReturn<Target, Services>,
-	testSuites: TestSuites<Target, Services>,
+	testSuites: TestSuites<Target, ClassTarget, Services>,
 ) {
 	describe(`Class ${(cls as ClassOf<Target>).name}`, () => {
-		mountTests<Target, Services>(cls, bootStrapper, testSuites);
+		mountTests<Target, ClassTarget, Services>(cls, bootStrapper, testSuites);
 	});
 }
 
 export namespace describeClass {
-	export function only<Target, Services>	(
-		cls: ClassOf<Target>,
+	export function only<Target, ClassTarget extends ClassOf<Target>, Services>	(
+		cls: ClassTarget,
 		bootStrapper: () => BootStrapperReturn<Target, Services>,
-		testSuites: TestSuites<Target, Services>,
+		testSuites: TestSuites<Target, ClassTarget, Services>,
 	) {
 		describe.only(`Class ${cls.name}`, () => {
-			mountTests<Target, Services>(cls, bootStrapper, testSuites);
+			mountTests<Target, ClassTarget, Services>(cls, bootStrapper, testSuites);
 		});
 	}
 
-	export function skip<Target, Services>	(
-		cls: ClassOf<Target>,
+	export function skip<Target, ClassTarget extends ClassOf<Target>, Services>	(
+		cls: ClassTarget,
 		bootStrapper: () => BootStrapperReturn<Target, Services>,
-		testSuites: TestSuites<Target, Services>,
+		testSuites: TestSuites<Target, ClassTarget, Services>,
 	) {
 		describe.skip(`Class ${cls.name}`, () => {
-			mountTests<Target, Services>(cls, bootStrapper, testSuites);
+			mountTests<Target, ClassTarget, Services>(cls, bootStrapper, testSuites);
 		});
 	}
 }

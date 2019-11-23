@@ -25,7 +25,7 @@ export interface GeneralStaticTests<Target> {
 export declare type StaticTests<ClassTarget> = {
     [key in keyof ClassTarget]: StaticMethodTestSuite;
 };
-export declare function mountTests<Target, Services>(cls: ClassOf<Target>, bootStrapper: () => BootStrapperReturn<Target, Services>, testSuites: TestSuites<Target, Services>): void;
+export declare function mountTests<Target, ClassTarget extends ClassOf<Target>, Services>(cls: ClassTarget, bootStrapper: () => BootStrapperReturn<Target, Services>, testSuites: TestSuites<Target, ClassTarget, Services>): void;
 export declare function mountInstanceTests<Target, Services>(bootStrapper: () => BootStrapperReturn<Target, Services>, instanceTests: GeneralInstanceTests<Target, Services>, cls: ClassOf<Target>, title: string, prepare: boolean): void;
 export interface BaseInstanceTestFunction<Target, Services> {
     (description: string, callback: (target: Target, services: Services) => any): any;
@@ -35,18 +35,18 @@ export interface InstanceTestFunction<Target, Services> extends BaseInstanceTest
     skip: BaseInstanceTestFunction<Target, Services>;
 }
 export declare function getIt<Target, Services>(getTarget: () => Target, getServices: () => Services): InstanceTestFunction<Target, Services>;
-export declare function mountTestCase<T>(getTarget: () => T, prototype: T, methodName: keyof T, callback: () => any, prepare: boolean): void;
-export declare function mountStaticTests<ClassTarget>(staticTests: StaticTests<ClassTarget>, cls: ClassTarget, title: string, prepare: boolean): void;
-export interface TestSuites<Target, Services> {
+export declare function mountTestCase(getTarget: () => any, prototype: any, methodName: string, callback: () => any, prepare: boolean): void;
+export declare function mountStaticTests<ClassTarget>(staticTests: GeneralStaticTests<ClassTarget>, cls: ClassTarget, title: string, prepare: boolean): void;
+export interface TestSuites<Target, ClassTarget extends ClassOf<Target>, Services> {
     instance?: {
         methods?: InstanceTests<Target, Services>;
         privateMethods?: GeneralInstanceTests<Target, Services>;
         general?: GeneralInstanceTests<Target, Services>;
     };
     static?: {
-        methods?: StaticTests<Target>;
-        privateMethods?: GeneralStaticTests<Target>;
-        general?: GeneralStaticTests<Target>;
+        methods?: StaticTests<ClassTarget>;
+        privateMethods?: GeneralStaticTests<ClassTarget>;
+        general?: GeneralStaticTests<ClassTarget>;
     };
 }
 /**
@@ -67,9 +67,9 @@ export interface TestSuites<Target, Services> {
  * will throw an error. This behavior helps to eliminate scope invasion during the tests, and you're assured that no other code
  * other than the method being tested will run.
  */
-export declare function describeClass<Target, ClassTarget extends ClassOf<Target>, Services>(cls: ClassTarget, bootStrapper: () => BootStrapperReturn<Target, Services>, testSuites: TestSuites<Target, Services>): void;
+export declare function describeClass<Target, ClassTarget extends ClassOf<Target>, Services>(cls: ClassTarget, bootStrapper: () => BootStrapperReturn<Target, Services>, testSuites: TestSuites<Target, ClassTarget, Services>): void;
 export declare namespace describeClass {
-    function only<Target, Services>(cls: ClassOf<Target>, bootStrapper: () => BootStrapperReturn<Target, Services>, testSuites: TestSuites<Target, Services>): void;
-    function skip<Target, Services>(cls: ClassOf<Target>, bootStrapper: () => BootStrapperReturn<Target, Services>, testSuites: TestSuites<Target, Services>): void;
+    function only<Target, ClassTarget extends ClassOf<Target>, Services>(cls: ClassTarget, bootStrapper: () => BootStrapperReturn<Target, Services>, testSuites: TestSuites<Target, ClassTarget, Services>): void;
+    function skip<Target, ClassTarget extends ClassOf<Target>, Services>(cls: ClassTarget, bootStrapper: () => BootStrapperReturn<Target, Services>, testSuites: TestSuites<Target, ClassTarget, Services>): void;
 }
 export {};
