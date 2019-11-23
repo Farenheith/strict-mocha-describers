@@ -17,7 +17,7 @@ function mountInstanceTests(bootStrapper, instanceTests, cls) {
             for (const method of Object.getOwnPropertyNames(instanceTests)) {
                 const testCase = instanceTests[method];
                 const it = getIt(() => bootStrap.target, () => bootStrap.services);
-                const callback = () => mountTestCase(() => bootStrap.target, cls.prototype, method, () => testCase.tests(it, bootStrap.target, bootStrap.services));
+                const callback = () => mountTestCase(() => bootStrap.target, cls.prototype, method, () => testCase.tests(it));
                 switch (testCase.flag) {
                     case 'only':
                         mocha_1.describe.only(`.${method}()`, callback);

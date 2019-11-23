@@ -25,7 +25,7 @@ export declare function mountTestCase<T>(getTarget: () => T, prototype: T, metho
 export declare function mountStaticTests<Target>(staticTests: StaticTests<Target>, cls: ClassOf<Target>): void;
 export interface MethodTestSuite<Target, Services> {
     readonly flag?: TestCaseConf;
-    tests(it: InstanceTestFunction<Target, Services | undefined>, target: Target, services: Services | undefined): void;
+    tests(it: InstanceTestFunction<Target, Services | undefined>): void;
 }
 export interface StaticMethodTestCase<Target> {
     readonly flag?: TestCaseConf;

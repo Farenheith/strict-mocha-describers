@@ -41,7 +41,7 @@ export function mountInstanceTests<Target, Services>(
 				const testCase = instanceTests[method as keyof Target];
 				const it = getIt(() => bootStrap.target, () => bootStrap.services);
 				const callback = () => mountTestCase(() => bootStrap.target, cls.prototype, method, () =>
-					testCase.tests(it, bootStrap.target, bootStrap.services));
+					testCase.tests(it));
 				switch (testCase.flag) {
 					case 'only':
 						describe.only(`.${method}()`, callback);
@@ -130,7 +130,7 @@ export function mountStaticTests<Target>(
 
 export interface MethodTestSuite<Target, Services> {
 	readonly flag?: TestCaseConf;
-	tests(it: InstanceTestFunction<Target, Services | undefined>, target: Target, services: Services | undefined): void;
+	tests(it: InstanceTestFunction<Target, Services | undefined>): void;
 }
 
 export interface StaticMethodTestCase<Target> {
