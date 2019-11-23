@@ -1,7 +1,7 @@
 import { ClassOf } from './strict-describers';
 interface BootStrapperReturn<Target, Services> {
     target: Target;
-    services: Services;
+    services: Services | undefined;
 }
 declare type TestCaseConf = 'only' | 'skip';
 declare type InstanceTests<Target, Services> = {
@@ -16,7 +16,7 @@ export declare function mountTestCase<T>(target: T, prototype: T, methodName: ke
 export declare function mountStaticTests<Target>(staticTests: StaticTests<Target>, cls: ClassOf<Target>): void;
 export interface MethodTestCase<Target, Services> {
     readonly flag?: TestCaseConf;
-    tests(target: Target, services: Services): void;
+    tests(target: Target, services: Services | undefined): void;
 }
 export interface StaticMethodTestCase<Target> {
     readonly flag?: TestCaseConf;

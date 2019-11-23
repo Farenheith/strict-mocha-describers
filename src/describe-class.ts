@@ -3,7 +3,7 @@ import { ClassOf, testUtils } from './strict-describers';
 
 interface BootStrapperReturn<Target, Services> {
 	target: Target,
-	services: Services,
+	services: Services | undefined,
 }
 
 type TestCaseConf = 'only' | 'skip';
@@ -96,7 +96,7 @@ export function mountStaticTests<Target>(
 
 export interface MethodTestCase<Target, Services> {
 	readonly flag?: TestCaseConf;
-	tests(target: Target, services: Services): void;
+	tests(target: Target, services: Services | undefined): void;
 }
 
 export interface StaticMethodTestCase<Target> {
