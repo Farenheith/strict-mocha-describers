@@ -164,7 +164,7 @@ export function mountStaticTests<ClassTarget>(
 ) {
 	describe(title, () => {
 		for (const method of Object.getOwnPropertyNames(staticTests) as Array<keyof ClassTarget>) {
-			const testCase = staticTests[method] as StaticMethodTestSuite;
+			const testCase = staticTests[method];
 			const callback = () => mountTestCase(() => cls, cls, method, () => testCase.tests(mochaIt), prepare);
 			switch (testCase.flag) {
 				case 'only':
