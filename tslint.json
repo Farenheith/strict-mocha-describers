@@ -3,6 +3,8 @@
     "rules": {
         "interface-name": false,
         "no-any": false,
-        "ban": false
+        "ban": false,
+        "no-namespace": false,
+        "trailing-comma": true
     }
 }

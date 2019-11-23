@@ -140,13 +140,13 @@ describe('strict-describers', () => {
 
 			beforeEach(() => {
 				service = sinon.stub().returns(test);
-				sinon.stub(mocha, 'beforeEach').callsFake(x => x());
+				sinon.stub(mocha, 'beforeEach').callsFake(x => (x as any)());
 				callback = sinon.stub();
 				sinon.stub(strictDescribers.testUtils, 'prepare').returns([
-					['test1', 'value1' as any],
+				['test1', 'value1' as any],
 					['test2', 'value2' as any],
 				]);
-				sinon.stub(mocha, 'afterEach').callsFake(x => x());
+				sinon.stub(mocha, 'afterEach').callsFake(x => (x as any)());
 			});
 
 			it('should mount a test describer correctly', () => {
@@ -180,7 +180,7 @@ describe('strict-describers', () => {
 						cb();
 					},
 				);
-				mocha.describe = sinon.stub().callsFake((_a, func) => func());
+				(mocha as any).describe = sinon.stub().callsFake((_a, func) => func());
 			});
 
 			afterEach(() => {
@@ -293,11 +293,11 @@ describe('strict-describers', () => {
 						cb();
 					},
 				);
-				mocha.describe = sinon.stub().callsFake((_a, func) => func());
+				(mocha as any).describe = sinon.stub().callsFake((_a, func) => func());
 			});
 
 			afterEach(() => {
-				mocha.describe = bkp;
+				(mocha as any).describe = bkp;
 			});
 
 			it('should call describe', () => {

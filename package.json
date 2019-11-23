@@ -28,6 +28,7 @@
   "homepage": "https://github.com/Farenheith/strict-mocha-describers#readme",
   "devDependencies": {
     "@types/chai": "^4.2.4",
+    "@types/mocha": "^5.2.7",
     "@types/sinon": "^7.5.0",
     "gts": "^1.1.0",
     "nyc": "^14.1.1",
