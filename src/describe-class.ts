@@ -30,8 +30,8 @@ export interface GeneralStaticTests<Target> {
 	[key: string]: StaticMethodTestSuite;
 }
 
-export type StaticTests<Target> = {
-	[key in keyof ClassOf<Target>]: StaticMethodTestSuite;
+export type StaticTests<ClassTarget> = {
+	[key in keyof ClassTarget]: StaticMethodTestSuite;
 };
 
 export function mountTests<Target, Services>(cls: ClassOf<Target>,
@@ -40,17 +40,17 @@ export function mountTests<Target, Services>(cls: ClassOf<Target>,
 ) {
 	if (testSuites.static) {
 		if (testSuites.static.methods) {
-			mountStaticTests<Target>(testSuites.static.methods,
+			mountStaticTests<ClassOf<Target>>(testSuites.static.methods,
 				cls, 'Static methods', false);
 		}
 		
 		if (testSuites.static.privateMethods) {
-			mountStaticTests<Target>(testSuites.static.privateMethods,
+			mountStaticTests<ClassOf<Target>>(testSuites.static.privateMethods,
 				cls, 'Private static methods', true);
 		}
 
 		if (testSuites.static.general) {
-			mountStaticTests<Target>(testSuites.static.general,
+			mountStaticTests<ClassOf<Target>>(testSuites.static.general,
 				cls, 'General static tests', false);
 		}
 	}
@@ -156,14 +156,14 @@ export function mountTestCase<T>(
 	}
 }
 
-export function mountStaticTests<Target>(
-	staticTests: StaticTests<Target>,
-	cls: ClassOf<Target>,
+export function mountStaticTests<ClassTarget>(
+	staticTests: StaticTests<ClassTarget>,
+	cls: ClassTarget,
 	title: string,
 	prepare: boolean,
 ) {
 	describe(title, () => {
-		for (const method of Object.getOwnPropertyNames(staticTests) as Array<keyof ClassOf<Target>>) {
+		for (const method of Object.getOwnPropertyNames(staticTests) as Array<keyof ClassTarget>) {
 			const testCase = staticTests[method] as StaticMethodTestSuite;
 			const callback = () => mountTestCase(() => cls, cls, method, () => testCase.tests(mochaIt), prepare);
 			switch (testCase.flag) {

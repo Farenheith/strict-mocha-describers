@@ -22,8 +22,8 @@ export declare type InstanceTests<Target, Services> = {
 export interface GeneralStaticTests<Target> {
     [key: string]: StaticMethodTestSuite;
 }
-export declare type StaticTests<Target> = {
-    [key in keyof ClassOf<Target>]: StaticMethodTestSuite;
+export declare type StaticTests<ClassTarget> = {
+    [key in keyof ClassTarget]: StaticMethodTestSuite;
 };
 export declare function mountTests<Target, Services>(cls: ClassOf<Target>, bootStrapper: () => BootStrapperReturn<Target, Services>, testSuites: TestSuites<Target, Services>): void;
 export declare function mountInstanceTests<Target, Services>(bootStrapper: () => BootStrapperReturn<Target, Services>, instanceTests: GeneralInstanceTests<Target, Services>, cls: ClassOf<Target>, title: string, prepare: boolean): void;
@@ -36,7 +36,7 @@ export interface InstanceTestFunction<Target, Services> extends BaseInstanceTest
 }
 export declare function getIt<Target, Services>(getTarget: () => Target, getServices: () => Services): InstanceTestFunction<Target, Services>;
 export declare function mountTestCase<T>(getTarget: () => T, prototype: T, methodName: keyof T, callback: () => any, prepare: boolean): void;
-export declare function mountStaticTests<Target>(staticTests: StaticTests<Target>, cls: ClassOf<Target>, title: string, prepare: boolean): void;
+export declare function mountStaticTests<ClassTarget>(staticTests: StaticTests<ClassTarget>, cls: ClassTarget, title: string, prepare: boolean): void;
 export interface TestSuites<Target, Services> {
     instance?: {
         methods?: InstanceTests<Target, Services>;
