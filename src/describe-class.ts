@@ -1,4 +1,4 @@
-import { describe, beforeEach, it as mochaIt } from 'mocha';
+import { describe, beforeEach, it as mochaIt, TestFunction } from 'mocha';
 import { ClassOf, testUtils } from './strict-describers';
 
 interface BootStrapperReturn<Target, Services> {
@@ -9,7 +9,7 @@ interface BootStrapperReturn<Target, Services> {
 type TestCaseConf = 'only' | 'skip';
 
 type InstanceTests<Target, Services> = {
-	[key in keyof Target]: MethodTestCase<Target, Services>;
+	[key in keyof Target]: MethodTestSuite<Target, Services>;
 };
 
 type StaticTests<Target> = {
@@ -39,8 +39,9 @@ export function mountInstanceTests<Target, Services>(
 		describe('', () => {
 			for (const method of Object.getOwnPropertyNames(instanceTests)) {
 				const testCase = instanceTests[method as keyof Target];
-				const callback = () => testUtils.mountTest(() => bootStrap.target, cls.prototype, method, () =>
-					testCase.tests(bootStrap.target, bootStrap.services));
+				const it = getIt(() => bootStrap.target, () => bootStrap.services);
+				const callback = () => mountTestCase(() => bootStrap.target, cls.prototype, method, () =>
+					testCase.tests(it, bootStrap.target, bootStrap.services));
 				switch (testCase.flag) {
 					case 'only':
 						describe.only(`.${method}()`, callback);
@@ -56,10 +57,43 @@ export function mountInstanceTests<Target, Services>(
 	});
 }
 
-export function mountTestCase<T>(target: T, prototype: T, methodName: keyof T, callback: () => any) {
+interface BaseInstanceTestFunction {
+	<Target, Services>(description: string, callback: (target: Target, services: Services) => any);
+	
+}
+
+interface InstanceTestFunction extends BaseInstanceTestFunction {
+	only: BaseInstanceTestFunction;
+	skip: BaseInstanceTestFunction;
+}
+
+export function getIt<Target, Services>(getTarget: () => Target, getServices: () => Services) {
+	const result  = ((description: string, callback: (target: Target, services: Services) => any) => {
+		return mochaIt(description, () => callback(getTarget(), getServices()));
+	}) as InstanceTestFunction;
+
+	result.only = ((description: string, callback: (target: Target, services: Services) => any) => {
+		return mochaIt.only(description, () => callback(getTarget(), getServices()));
+	}) as BaseInstanceTestFunction;
+
+	result.skip = ((description: string, callback: (target: Target, services: Services) => any) => {
+		return mochaIt.skip(description, () => callback(getTarget(), getServices()));
+	}) as BaseInstanceTestFunction;
+
+	return result;
+}
+
+export function mountTestCase<T>(
+	getTarget: () => T,
+	prototype: T,
+	methodName: keyof T,
+	callback: () => any
+) {
 	let backup: Array<[string, Function]>;
+	let target: T;
 
 	beforeEach(() => {
+		target = getTarget();
 		backup = testUtils.prepare(target, prototype, methodName);
 	});
 
@@ -79,7 +113,7 @@ export function mountStaticTests<Target>(
 	describe('static methods', () => {
 		for (const method of Object.getOwnPropertyNames(staticTests) as Array<keyof ClassOf<Target>>) {
 			const testCase = staticTests[method] as StaticMethodTestCase<Target>;
-			const callback = () => mountTestCase(cls, cls, method, () => testCase.tests(cls));
+			const callback = () => mountTestCase(() => cls, cls, method, () => testCase.tests(mochaIt));
 			switch (testCase.flag) {
 				case 'only':
 					describe.only(`.${method}()`, callback);
@@ -94,14 +128,14 @@ export function mountStaticTests<Target>(
 	});
 }
 
-export interface MethodTestCase<Target, Services> {
+export interface MethodTestSuite<Target, Services> {
 	readonly flag?: TestCaseConf;
-	tests(target: Target, services: Services | undefined): void;
+	tests(it: InstanceTestFunction, target: Target, services: Services | undefined): void;
 }
 
 export interface StaticMethodTestCase<Target> {
 	readonly flag?: TestCaseConf;
-	tests(target: ClassOf<Target>): void;
+	tests(it: TestFunction): void;
 }
 
 export function describeClass<Target, Services>	(

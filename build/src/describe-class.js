@@ -16,7 +16,8 @@ function mountInstanceTests(bootStrapper, instanceTests, cls) {
         mocha_1.describe('', () => {
             for (const method of Object.getOwnPropertyNames(instanceTests)) {
                 const testCase = instanceTests[method];
-                const callback = () => strict_describers_1.testUtils.mountTest(() => bootStrap.target, cls.prototype, method, () => testCase.tests(bootStrap.target, bootStrap.services));
+                const it = getIt(() => bootStrap.target, () => bootStrap.services);
+                const callback = () => mountTestCase(() => bootStrap.target, cls.prototype, method, () => testCase.tests(it, bootStrap.target, bootStrap.services));
                 switch (testCase.flag) {
                     case 'only':
                         mocha_1.describe.only(`.${method}()`, callback);
@@ -32,9 +33,24 @@ function mountInstanceTests(bootStrapper, instanceTests, cls) {
     });
 }
 exports.mountInstanceTests = mountInstanceTests;
-function mountTestCase(target, prototype, methodName, callback) {
+function getIt(getTarget, getServices) {
+    const result = ((description, callback) => {
+        return mocha_1.it(description, () => callback(getTarget(), getServices()));
+    });
+    result.only = ((description, callback) => {
+        return mocha_1.it.only(description, () => callback(getTarget(), getServices()));
+    });
+    result.skip = ((description, callback) => {
+        return mocha_1.it.skip(description, () => callback(getTarget(), getServices()));
+    });
+    return result;
+}
+exports.getIt = getIt;
+function mountTestCase(getTarget, prototype, methodName, callback) {
     let backup;
+    let target;
     mocha_1.beforeEach(() => {
+        target = getTarget();
         backup = strict_describers_1.testUtils.prepare(target, prototype, methodName);
     });
     callback();
@@ -49,7 +65,7 @@ function mountStaticTests(staticTests, cls) {
     mocha_1.describe('static methods', () => {
         for (const method of Object.getOwnPropertyNames(staticTests)) {
             const testCase = staticTests[method];
-            const callback = () => mountTestCase(cls, cls, method, () => testCase.tests(cls));
+            const callback = () => mountTestCase(() => cls, cls, method, () => testCase.tests(mocha_1.it));
             switch (testCase.flag) {
                 case 'only':
                     mocha_1.describe.only(`.${method}()`, callback);
