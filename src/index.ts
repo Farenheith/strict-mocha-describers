@@ -1,3 +1,14 @@
 export { method } from './strict-describers';
 export { expectCall } from './expect-call';
-export { describeClass } from './describe-class';
+export {
+	describeClass,
+	TestSuites,
+	MethodTestSuite,
+	StaticMethodTestSuite,
+	BaseInstanceTestFunction,
+	GeneralInstanceTests,
+	GeneralStaticTests,
+	InstanceTestFunction,
+	InstanceTests,
+	StaticTests,
+} from './describe-class';

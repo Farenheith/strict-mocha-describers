@@ -8,20 +8,30 @@ interface BootStrapperReturn<Target, Services> {
 
 type TestCaseConf = 'only' | 'skip';
 
-interface GeneralInstanceTests<Target, Services> {
+export interface MethodTestSuite<Target, Services> {
+	readonly flag?: TestCaseConf;
+	tests(it: InstanceTestFunction<Target, Services | undefined>): void;
+}
+
+export interface StaticMethodTestSuite {
+	readonly flag?: TestCaseConf;
+	tests(it: TestFunction): void;
+}
+
+export interface GeneralInstanceTests<Target, Services> {
 	[key: string]: MethodTestSuite<Target, Services>;
 }
 
-type InstanceTests<Target, Services> = {
+export type InstanceTests<Target, Services> = {
 	[key in keyof Target]: MethodTestSuite<Target, Services>;
 };
 
-interface GeneralStaticTests<Target> {
-	[key: string]: StaticMethodTestCase<Target>;
+export interface GeneralStaticTests<Target> {
+	[key: string]: StaticMethodTestSuite;
 }
 
-type StaticTests<Target> = {
-	[key in keyof ClassOf<Target>]: StaticMethodTestCase<Target>;
+export type StaticTests<Target> = {
+	[key in keyof ClassOf<Target>]: StaticMethodTestSuite;
 };
 
 export function mountTests<Target, Services>(cls: ClassOf<Target>,
@@ -92,12 +102,12 @@ export function mountInstanceTests<Target, Services>(
 	});
 }
 
-interface BaseInstanceTestFunction<Target, Services> {
+export interface BaseInstanceTestFunction<Target, Services> {
 	(description: string, callback: (target: Target, services: Services) => any);
 	
 }
 
-interface InstanceTestFunction<Target, Services> extends BaseInstanceTestFunction<Target, Services> {
+export interface InstanceTestFunction<Target, Services> extends BaseInstanceTestFunction<Target, Services> {
 	only: BaseInstanceTestFunction<Target, Services>;
 	skip: BaseInstanceTestFunction<Target, Services>;
 }
@@ -154,7 +164,7 @@ export function mountStaticTests<Target>(
 ) {
 	describe(title, () => {
 		for (const method of Object.getOwnPropertyNames(staticTests) as Array<keyof ClassOf<Target>>) {
-			const testCase = staticTests[method] as StaticMethodTestCase<Target>;
+			const testCase = staticTests[method] as StaticMethodTestSuite;
 			const callback = () => mountTestCase(() => cls, cls, method, () => testCase.tests(mochaIt), prepare);
 			switch (testCase.flag) {
 				case 'only':
@@ -168,16 +178,6 @@ export function mountStaticTests<Target>(
 			}
 		}
 	});
-}
-
-export interface MethodTestSuite<Target, Services> {
-	readonly flag?: TestCaseConf;
-	tests(it: InstanceTestFunction<Target, Services | undefined>): void;
-}
-
-export interface StaticMethodTestCase<Target> {
-	readonly flag?: TestCaseConf;
-	tests(it: TestFunction): void;
 }
 
 export interface TestSuites<Target, Services> {

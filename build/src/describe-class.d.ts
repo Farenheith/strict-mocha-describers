@@ -5,38 +5,38 @@ interface BootStrapperReturn<Target, Services> {
     services: Services | undefined;
 }
 declare type TestCaseConf = 'only' | 'skip';
-interface GeneralInstanceTests<Target, Services> {
+export interface MethodTestSuite<Target, Services> {
+    readonly flag?: TestCaseConf;
+    tests(it: InstanceTestFunction<Target, Services | undefined>): void;
+}
+export interface StaticMethodTestSuite {
+    readonly flag?: TestCaseConf;
+    tests(it: TestFunction): void;
+}
+export interface GeneralInstanceTests<Target, Services> {
     [key: string]: MethodTestSuite<Target, Services>;
 }
-declare type InstanceTests<Target, Services> = {
+export declare type InstanceTests<Target, Services> = {
     [key in keyof Target]: MethodTestSuite<Target, Services>;
 };
-interface GeneralStaticTests<Target> {
-    [key: string]: StaticMethodTestCase<Target>;
+export interface GeneralStaticTests<Target> {
+    [key: string]: StaticMethodTestSuite;
 }
-declare type StaticTests<Target> = {
-    [key in keyof ClassOf<Target>]: StaticMethodTestCase<Target>;
+export declare type StaticTests<Target> = {
+    [key in keyof ClassOf<Target>]: StaticMethodTestSuite;
 };
 export declare function mountTests<Target, Services>(cls: ClassOf<Target>, bootStrapper: () => BootStrapperReturn<Target, Services>, testSuites: TestSuites<Target, Services>): void;
 export declare function mountInstanceTests<Target, Services>(bootStrapper: () => BootStrapperReturn<Target, Services>, instanceTests: GeneralInstanceTests<Target, Services>, cls: ClassOf<Target>, title: string, prepare: boolean): void;
-interface BaseInstanceTestFunction<Target, Services> {
+export interface BaseInstanceTestFunction<Target, Services> {
     (description: string, callback: (target: Target, services: Services) => any): any;
 }
-interface InstanceTestFunction<Target, Services> extends BaseInstanceTestFunction<Target, Services> {
+export interface InstanceTestFunction<Target, Services> extends BaseInstanceTestFunction<Target, Services> {
     only: BaseInstanceTestFunction<Target, Services>;
     skip: BaseInstanceTestFunction<Target, Services>;
 }
 export declare function getIt<Target, Services>(getTarget: () => Target, getServices: () => Services): InstanceTestFunction<Target, Services>;
 export declare function mountTestCase<T>(getTarget: () => T, prototype: T, methodName: keyof T, callback: () => any, prepare: boolean): void;
 export declare function mountStaticTests<Target>(staticTests: StaticTests<Target>, cls: ClassOf<Target>, title: string, prepare: boolean): void;
-export interface MethodTestSuite<Target, Services> {
-    readonly flag?: TestCaseConf;
-    tests(it: InstanceTestFunction<Target, Services | undefined>): void;
-}
-export interface StaticMethodTestCase<Target> {
-    readonly flag?: TestCaseConf;
-    tests(it: TestFunction): void;
-}
 export interface TestSuites<Target, Services> {
     instance?: {
         methods?: InstanceTests<Target, Services>;
