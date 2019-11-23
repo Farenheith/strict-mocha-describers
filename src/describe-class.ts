@@ -200,13 +200,13 @@ export interface TestSuites<Target, Services> {
  * @param cls the class you want to test 
  * @param bootStrapper method used to create the target instance for the test and the mocked services.
  * It's recommended for all mocked services to be just empty objects but with the correct type.
- * This way, you can stub the methods each method test suite will need and so you can garantee that will
- * be any other code being ran during your test that is not you intented to.
- * @param testSuites test suites is wrapper object for 6 kind of test cases:
- * first, suites are separated by instance and static. The difference between those is that the bootstrapper
+ * This way, you can stub each method each 'method test suite' will need and so you can garantee that
+ * no other class will run during your test that you didn't intented to.
+ * @param testSuites test suites is a wrapper object for 6 kind of test cases:
+ * first, suites are separated by 'instance' and 'static'. The difference between those is that the bootstrapper
  * are not ran for the static tests, as they're intended to static methods.
  * after that, you have three categories on each one: methods, privateMethods and general.
- * For general, there's no trick, it just a usual test. For the other ones, you must specify the name
+ * For general, there's no trick, it just an usual test. For the other ones, you must specify the name
  * of an existing method. During the test, the only method that will be real is the specified one. Any other method of the class
  * will throw an error. This behavior helps to eliminate scope invasion during the tests, and you're assured that no other code
  * other than the method being tested will run.
