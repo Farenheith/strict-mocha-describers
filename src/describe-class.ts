@@ -57,28 +57,28 @@ export function mountInstanceTests<Target, Services>(
 	});
 }
 
-interface BaseInstanceTestFunction {
-	<Target, Services>(description: string, callback: (target: Target, services: Services) => any);
+interface BaseInstanceTestFunction<Target, Services> {
+	(description: string, callback: (target: Target, services: Services) => any);
 	
 }
 
-interface InstanceTestFunction extends BaseInstanceTestFunction {
-	only: BaseInstanceTestFunction;
-	skip: BaseInstanceTestFunction;
+interface InstanceTestFunction<Target, Services> extends BaseInstanceTestFunction<Target, Services> {
+	only: BaseInstanceTestFunction<Target, Services>;
+	skip: BaseInstanceTestFunction<Target, Services>;
 }
 
 export function getIt<Target, Services>(getTarget: () => Target, getServices: () => Services) {
 	const result  = ((description: string, callback: (target: Target, services: Services) => any) => {
 		return mochaIt(description, () => callback(getTarget(), getServices()));
-	}) as InstanceTestFunction;
+	}) as InstanceTestFunction<Target, Services>;
 
 	result.only = ((description: string, callback: (target: Target, services: Services) => any) => {
 		return mochaIt.only(description, () => callback(getTarget(), getServices()));
-	}) as BaseInstanceTestFunction;
+	}) as BaseInstanceTestFunction<Target, Services>;
 
 	result.skip = ((description: string, callback: (target: Target, services: Services) => any) => {
 		return mochaIt.skip(description, () => callback(getTarget(), getServices()));
-	}) as BaseInstanceTestFunction;
+	}) as BaseInstanceTestFunction<Target, Services>;
 
 	return result;
 }
@@ -130,7 +130,7 @@ export function mountStaticTests<Target>(
 
 export interface MethodTestSuite<Target, Services> {
 	readonly flag?: TestCaseConf;
-	tests(it: InstanceTestFunction, target: Target, services: Services | undefined): void;
+	tests(it: InstanceTestFunction<Target, Services | undefined>, target: Target, services: Services | undefined): void;
 }
 
 export interface StaticMethodTestCase<Target> {
