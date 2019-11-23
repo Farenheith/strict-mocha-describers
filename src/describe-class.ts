@@ -1,4 +1,4 @@
-import { describe, beforeEach } from 'mocha';
+import { describe, beforeEach, it as mochaIt } from 'mocha';
 import { ClassOf, testUtils } from './strict-describers';
 
 interface BootStrapperReturn<Target, Services> {
@@ -39,7 +39,7 @@ export function mountInstanceTests<Target, Services>(
 		describe('', () => {
 			for (const method of Object.getOwnPropertyNames(instanceTests)) {
 				const testCase = instanceTests[method as keyof Target];
-				const callback = () => mountTestCase(bootStrap.target, cls.prototype, method, () =>
+				const callback = () => testUtils.mountTest(() => bootStrap.target, cls.prototype, method, () =>
 					testCase.tests(bootStrap.target, bootStrap.services));
 				switch (testCase.flag) {
 					case 'only':
