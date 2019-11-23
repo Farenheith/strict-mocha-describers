@@ -73,24 +73,22 @@ export function mountInstanceTests<Target, Services>(
 	describe(title, () => {
 		let bootStrap: BootStrapperReturn<Target, Services>;
 		beforeEach(() => bootStrap = bootStrapper());
-		describe('', () => {
-			for (const method of Object.getOwnPropertyNames(instanceTests)) {
-				const testCase = instanceTests[method];
-				const it = getIt(() => bootStrap.target, () => bootStrap.services);
-				const callback = () => mountTestCase(() => bootStrap.target, cls.prototype, method, () =>
-					testCase.tests(it), prepare);
-				switch (testCase.flag) {
-					case 'only':
-						describe.only(`.${method}()`, callback);
-						break;
-					case 'skip':
-						describe.skip(`.${method}()`, callback);
-						break;
-					default:
-						describe(`.${method}()`, callback);
-				}
+		for (const method of Object.getOwnPropertyNames(instanceTests)) {
+			const testCase = instanceTests[method];
+			const it = getIt(() => bootStrap.target, () => bootStrap.services);
+			const callback = () => mountTestCase(() => bootStrap.target, cls.prototype, method, () =>
+				testCase.tests(it), prepare);
+			switch (testCase.flag) {
+				case 'only':
+					describe.only(`.${method}()`, callback);
+					break;
+				case 'skip':
+					describe.skip(`.${method}()`, callback);
+					break;
+				default:
+					describe(`.${method}()`, callback);
 			}
-		});
+		}
 	});
 }
 

@@ -31,23 +31,21 @@ function mountInstanceTests(bootStrapper, instanceTests, cls, title, prepare) {
     mocha_1.describe(title, () => {
         let bootStrap;
         mocha_1.beforeEach(() => bootStrap = bootStrapper());
-        mocha_1.describe('', () => {
-            for (const method of Object.getOwnPropertyNames(instanceTests)) {
-                const testCase = instanceTests[method];
-                const it = getIt(() => bootStrap.target, () => bootStrap.services);
-                const callback = () => mountTestCase(() => bootStrap.target, cls.prototype, method, () => testCase.tests(it), prepare);
-                switch (testCase.flag) {
-                    case 'only':
-                        mocha_1.describe.only(`.${method}()`, callback);
-                        break;
-                    case 'skip':
-                        mocha_1.describe.skip(`.${method}()`, callback);
-                        break;
-                    default:
-                        mocha_1.describe(`.${method}()`, callback);
-                }
+        for (const method of Object.getOwnPropertyNames(instanceTests)) {
+            const testCase = instanceTests[method];
+            const it = getIt(() => bootStrap.target, () => bootStrap.services);
+            const callback = () => mountTestCase(() => bootStrap.target, cls.prototype, method, () => testCase.tests(it), prepare);
+            switch (testCase.flag) {
+                case 'only':
+                    mocha_1.describe.only(`.${method}()`, callback);
+                    break;
+                case 'skip':
+                    mocha_1.describe.skip(`.${method}()`, callback);
+                    break;
+                default:
+                    mocha_1.describe(`.${method}()`, callback);
             }
-        });
+        }
     });
 }
 exports.mountInstanceTests = mountInstanceTests;
