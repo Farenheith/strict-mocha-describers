@@ -211,12 +211,12 @@ export interface TestSuites<Target, Services> {
  * will throw an error. This behavior helps to eliminate scope invasion during the tests, and you're assured that no other code
  * other than the method being tested will run.
  */
-export function describeClass<Target, Services>	(
-	cls: ClassOf<Target>,
+export function describeClass<Target, ClassTarget extends ClassOf<Target>, Services>	(
+	cls: ClassTarget,
 	bootStrapper: () => BootStrapperReturn<Target, Services>,
 	testSuites: TestSuites<Target, Services>,
 ) {
-	describe(`Class ${cls.name}`, () => {
+	describe(`Class ${(cls as ClassOf<Target>).name}`, () => {
 		mountTests<Target, Services>(cls, bootStrapper, testSuites);
 	});
 }
