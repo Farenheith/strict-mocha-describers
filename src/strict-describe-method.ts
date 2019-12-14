@@ -46,7 +46,12 @@ export class MethodDescribeHelper<Target> extends StaticMethodDescribeHelper<Tar
 	}
 
 	createMethodDescribe(suite: (title: string, fn: () => void) => void) {
-		return (method: keyof Target, fn: (it: MethodTestFunction<Target>) => void) => {
+		return (method: keyof Target,
+			fn: (
+					it: MethodTestFunction<Target>,
+					getTarget: () => Target,
+				) => void
+		) => {
 			const wrapper = {} as TestWrapper<Target>;
 			const itHelper = new ItHelper(wrapper);
 			const it = itHelper.createIt();
@@ -66,7 +71,7 @@ export class MethodDescribeHelper<Target> extends StaticMethodDescribeHelper<Tar
 					);
 				});
 
-				fn(it);
+				fn(it, () => wrapper.target);
 
 				afterEach(() => {
 					for (const pair of backup) {
@@ -90,9 +95,8 @@ export class MethodDescribeHelper<Target> extends StaticMethodDescribeHelper<Tar
 	}
 }
 
-
 export interface BaseMethodSuite<Target> {
-	(methodName: keyof Target, fn: (it: MethodTestFunction<Target>) => void);
+	(methodName: keyof Target, fn: (it: MethodTestFunction<Target>, getTarget: () => Target) => void);
 }
 
 export interface MethodSuite<Target> extends BaseMethodSuite<Target> {

@@ -48,7 +48,7 @@ class MethodDescribeHelper extends StaticMethodDescribeHelper {
                     backup = strict_describers_1.testUtils.prepare(wrapper.target, this.cls.prototype, method);
                     staticBackup = strict_describers_1.testUtils.prepare(this.cls, this.cls);
                 });
-                fn(it);
+                fn(it, () => wrapper.target);
                 afterEach(() => {
                     for (const pair of backup) {
                         wrapper.target[pair[0]] = pair[1];

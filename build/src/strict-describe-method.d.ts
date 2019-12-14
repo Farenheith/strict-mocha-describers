@@ -10,11 +10,11 @@ export declare class StaticMethodDescribeHelper<Target> {
 export declare class MethodDescribeHelper<Target> extends StaticMethodDescribeHelper<Target> {
     protected readonly bootstrap: () => Target;
     constructor(bootstrap: () => Target, cls: ClassOf<Target>);
-    createMethodDescribe(suite: (title: string, fn: () => void) => void): (method: keyof Target, fn: (it: MethodTestFunction<Target>) => void) => void;
+    createMethodDescribe(suite: (title: string, fn: () => void) => void): (method: keyof Target, fn: (it: MethodTestFunction<Target>, getTarget: () => Target) => void) => void;
     createDescribe(): MethodSuite<Target>;
 }
 export interface BaseMethodSuite<Target> {
-    (methodName: keyof Target, fn: (it: MethodTestFunction<Target>) => void): any;
+    (methodName: keyof Target, fn: (it: MethodTestFunction<Target>, getTarget: () => Target) => void): any;
 }
 export interface MethodSuite<Target> extends BaseMethodSuite<Target> {
     only: BaseMethodSuite<Target>;
