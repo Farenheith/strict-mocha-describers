@@ -9,6 +9,13 @@ function mountClassDescribe(cls, bootStrap, fn, suite) {
     });
 }
 exports.mountClassDescribe = mountClassDescribe;
+function mountSructDescribe(cls, description, fn, suite) {
+    const methodDescribeHelper = new strict_describe_method_1.StaticMethodDescribeHelper(cls);
+    suite(description, () => {
+        fn(methodDescribeHelper.createStaticDescribe());
+    });
+}
+exports.mountSructDescribe = mountSructDescribe;
 function mountStaticClassDescribe(cls, fn, suite) {
     const methodDescribeHelper = new strict_describe_method_1.StaticMethodDescribeHelper(cls);
     suite(`static class ${cls.name}`, () => {
@@ -62,4 +69,18 @@ exports.describeStaticClass = describeStaticClass;
     }
     describeStaticClass.skip = skip;
 })(describeStaticClass = exports.describeStaticClass || (exports.describeStaticClass = {}));
+function describeSruct(struct, description, fn) {
+    mountSructDescribe(struct, description, fn, mocha_1.describe);
+}
+exports.describeSruct = describeSruct;
+(function (describeSruct) {
+    function only(struct, description, fn) {
+        mountSructDescribe(struct, description, fn, mocha_1.describe.only);
+    }
+    describeSruct.only = only;
+    function skip(struct, description, fn) {
+        mountSructDescribe(struct, description, fn, mocha_1.describe.skip);
+    }
+    describeSruct.skip = skip;
+})(describeSruct = exports.describeSruct || (exports.describeSruct = {}));
 //# sourceMappingURL=strict-describe-class.js.map

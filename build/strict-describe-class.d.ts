@@ -1,7 +1,8 @@
 import { ClassOf } from './strict-describers';
 import { MethodSuite, StaticMethodSuite } from './strict-describe-method';
-export declare function mountClassDescribe<Target>(cls: ClassOf<Target>, bootStrap: () => Target, fn: (describe: MethodSuite<Target>) => void, suite: (description: string, fn: () => void) => void): void;
-export declare function mountStaticClassDescribe<Target>(cls: ClassOf<Target>, fn: (describe: StaticMethodSuite<Target>) => void, suite: (description: string, fn: () => void) => void): void;
+export declare function mountClassDescribe<Target, Class extends ClassOf<Target>>(cls: Class, bootStrap: () => Target, fn: (describe: MethodSuite<Target, Class>) => void, suite: (description: string, fn: () => void) => void): void;
+export declare function mountSructDescribe<Target>(cls: Target, description: string, fn: (describe: StaticMethodSuite<Target>) => void, suite: (description: string, fn: () => void) => void): void;
+export declare function mountStaticClassDescribe<Target, Class extends ClassOf<Target>>(cls: Class, fn: (describe: StaticMethodSuite<Class>) => void, suite: (description: string, fn: () => void) => void): void;
 /**
  * A describer to create a Test Suite for a single class.
  * Using this describer is way to enforce a strict organization in the unit test,
@@ -20,13 +21,18 @@ export declare function mountStaticClassDescribe<Target>(cls: ClassOf<Target>, f
  * will throw an error. This behavior helps to eliminate scope invasion during the tests, and you're assured that no other code
  * other than the method being tested will run.
  */
-export declare function describeClass<Target>(cls: ClassOf<Target>, bootStrapper: () => Target, fn: (describe: MethodSuite<Target>) => void): void;
+export declare function describeClass<Target, Class extends ClassOf<Target>>(cls: Class, bootStrapper: () => Target, fn: (describe: MethodSuite<Target, Class>) => void): void;
 export declare namespace describeClass {
-    function only<Target>(cls: ClassOf<Target>, bootStrapper: () => Target, fn: (describe: MethodSuite<Target>) => void): void;
-    function skip<Target>(cls: ClassOf<Target>, bootStrapper: () => Target, fn: (describe: MethodSuite<Target>) => void): void;
+    function only<Target, Class extends ClassOf<Target>>(cls: Class, bootStrapper: () => Target, fn: (describe: MethodSuite<Target, Class>) => void): void;
+    function skip<Target, Class extends ClassOf<Target>>(cls: Class, bootStrapper: () => Target, fn: (describe: MethodSuite<Target, Class>) => void): void;
 }
-export declare function describeStaticClass<Target>(cls: ClassOf<Target>, fn: (describe: StaticMethodSuite<Target>) => void): void;
+export declare function describeStaticClass<Target, Class extends ClassOf<Target>>(cls: Class, fn: (describe: StaticMethodSuite<Class>) => void): void;
 export declare namespace describeStaticClass {
-    function only<Target>(cls: ClassOf<Target>, fn: (describe: StaticMethodSuite<Target>) => void): void;
-    function skip<Target>(cls: ClassOf<Target>, fn: (describe: StaticMethodSuite<Target>) => void): void;
+    function only<Target, Class extends ClassOf<Target>>(cls: Class, fn: (describe: StaticMethodSuite<Class>) => void): void;
+    function skip<Target, Class extends ClassOf<Target>>(cls: Class, fn: (describe: StaticMethodSuite<Class>) => void): void;
+}
+export declare function describeSruct<Struct>(struct: Struct, description: string, fn: (describe: StaticMethodSuite<Struct>) => void): void;
+export declare namespace describeSruct {
+    function only<Struct>(struct: Struct, description: string, fn: (describe: StaticMethodSuite<Struct>) => void): void;
+    function skip<Struct>(struct: Struct, description: string, fn: (describe: StaticMethodSuite<Struct>) => void): void;
 }

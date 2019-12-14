@@ -2,10 +2,10 @@ import { describe } from 'mocha';
 import { ClassOf } from './strict-describers';
 import { MethodSuite, MethodDescribeHelper, StaticMethodSuite, StaticMethodDescribeHelper } from './strict-describe-method';
 
-export function mountClassDescribe<Target>(
-	cls: ClassOf<Target>,
+export function mountClassDescribe<Target, Class extends ClassOf<Target>>(
+	cls: Class,
 	bootStrap: () => Target,
-	fn: (describe: MethodSuite<Target>) => void,
+	fn: (describe: MethodSuite<Target, Class>) => void,
 	suite: (description: string, fn: () => void) => void,
 ) {
 	const methodDescribeHelper = new MethodDescribeHelper(bootStrap, cls);
@@ -15,9 +15,22 @@ export function mountClassDescribe<Target>(
 	});
 }
 
-export function mountStaticClassDescribe<Target>(
-	cls: ClassOf<Target>,
+export function mountSructDescribe<Target>(
+	cls: Target,
+	description: string,
 	fn: (describe: StaticMethodSuite<Target>) => void,
+	suite: (description: string, fn: () => void) => void,
+) {
+	const methodDescribeHelper = new StaticMethodDescribeHelper(cls);
+
+	suite(description, () => {
+		fn(methodDescribeHelper.createStaticDescribe());
+	});
+}
+
+export function mountStaticClassDescribe<Target, Class extends ClassOf<Target>>(
+	cls: Class,
+	fn: (describe: StaticMethodSuite<Class>) => void,
 	suite: (description: string, fn: () => void) => void,
 ) {
 	const methodDescribeHelper = new StaticMethodDescribeHelper(cls);
@@ -45,51 +58,79 @@ export function mountStaticClassDescribe<Target>(
  * will throw an error. This behavior helps to eliminate scope invasion during the tests, and you're assured that no other code
  * other than the method being tested will run.
  */
-export function describeClass<Target>	(
-	cls: ClassOf<Target>,
+export function describeClass<Target, Class extends ClassOf<Target>>	(
+	cls: Class,
 	bootStrapper: () => Target,
-	fn: (describe: MethodSuite<Target>) => void
+	fn: (describe: MethodSuite<Target, Class>) => void
 ) {
-	mountClassDescribe<Target>(cls, bootStrapper, fn, describe)
+	mountClassDescribe<Target, Class>(cls, bootStrapper, fn, describe)
 }
 
 export namespace describeClass {
-	export function only<Target>	(
-		cls: ClassOf<Target>,
+	export function only<Target, Class extends ClassOf<Target>>	(
+		cls: Class,
 		bootStrapper: () => Target,
-		fn: (describe: MethodSuite<Target>) => void
+		fn: (describe: MethodSuite<Target, Class>) => void
 	) {
-		mountClassDescribe<Target>(cls, bootStrapper, fn, describe.only)
+		mountClassDescribe<Target, Class>(cls, bootStrapper, fn, describe.only)
 	}
 
-	export function skip<Target>	(
-		cls: ClassOf<Target>,
+	export function skip<Target, Class extends ClassOf<Target>>	(
+		cls: Class,
 		bootStrapper: () => Target,
-		fn: (describe: MethodSuite<Target>) => void
+		fn: (describe: MethodSuite<Target, Class>) => void
 	) {
-		mountClassDescribe<Target>(cls, bootStrapper, fn, describe.skip)
+		mountClassDescribe<Target, Class>(cls, bootStrapper, fn, describe.skip)
 	}
 }
 
-export function describeStaticClass<Target>	(
-	cls: ClassOf<Target>,
-	fn: (describe: StaticMethodSuite<Target>) => void
+export function describeStaticClass<Target, Class extends ClassOf<Target>>	(
+	cls: Class,
+	fn: (describe: StaticMethodSuite<Class>) => void
 ) {
-	mountStaticClassDescribe<Target>(cls, fn, describe);
+	mountStaticClassDescribe<Target, Class>(cls, fn, describe);
 }
 
 export namespace describeStaticClass {
-	export function only<Target>	(
-		cls: ClassOf<Target>,
-		fn: (describe: StaticMethodSuite<Target>) => void
+	export function only<Target, Class extends ClassOf<Target>>	(
+		cls: Class,
+		fn: (describe: StaticMethodSuite<Class>) => void
 	) {
-		mountStaticClassDescribe<Target>(cls, fn, describe.only);
+		mountStaticClassDescribe<Target, Class>(cls, fn, describe.only);
 	}
 
-	export function skip<Target>	(
-		cls: ClassOf<Target>,
-		fn: (describe: StaticMethodSuite<Target>) => void
+	export function skip<Target, Class extends ClassOf<Target>>	(
+		cls: Class,
+		fn: (describe: StaticMethodSuite<Class>) => void
 	) {
-		mountStaticClassDescribe<Target>(cls, fn, describe.skip);
+		mountStaticClassDescribe<Target, Class>(cls, fn, describe.skip);
+	}
+}
+
+
+
+export function describeSruct<Struct>	(
+	struct: Struct,
+	description: string,
+	fn: (describe: StaticMethodSuite<Struct>) => void
+) {
+	mountSructDescribe<Struct>(struct, description, fn, describe);
+}
+
+export namespace describeSruct {
+	export function only<Struct>	(
+		struct: Struct,
+		description: string,
+		fn: (describe: StaticMethodSuite<Struct>) => void
+	) {
+		mountSructDescribe<Struct>(struct, description, fn, describe.only);
+	}
+
+	export function skip<Struct>	(
+		struct: Struct,
+		description: string,
+		fn: (describe: StaticMethodSuite<Struct>) => void
+	) {
+		mountSructDescribe<Struct>(struct, description, fn, describe.skip);
 	}
 }

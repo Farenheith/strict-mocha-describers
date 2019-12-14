@@ -2,11 +2,11 @@ import { TestFunction } from "mocha";
 import { ClassOf, testUtils } from "./strict-describers";
 import { MethodTestFunction, TestWrapper, ItHelper } from "./strict-it";
 
-export class StaticMethodDescribeHelper<Target> {
-	constructor(protected readonly cls: ClassOf<Target>) { }
+export class StaticMethodDescribeHelper<Class> {
+	constructor(protected readonly cls: Class) { }
 
 	createSingleStaticDescribe(suite: (title: string, fn: () => void) => void) {
-		return (method: keyof ClassOf<Target>, fn: (it: TestFunction) => void) => {
+		return (method: keyof Class, fn: (it: TestFunction) => void) => {
 			suite(`static method ${method}`, () => {
 				let backup: Array<[string, Function]>;
 				beforeEach(() => {
@@ -29,7 +29,7 @@ export class StaticMethodDescribeHelper<Target> {
 	}
 
 	createStaticDescribe() {
-		const result = this.createSingleStaticDescribe(describe) as StaticMethodSuite<Target>;
+		const result = this.createSingleStaticDescribe(describe) as StaticMethodSuite<Class>;
 		result.skip = this.createSingleStaticDescribe(describe.skip);
 		result.only = this.createSingleStaticDescribe(describe.only);
 
@@ -37,10 +37,10 @@ export class StaticMethodDescribeHelper<Target> {
 	}
 }
 
-export class MethodDescribeHelper<Target> extends StaticMethodDescribeHelper<Target> {
+export class MethodDescribeHelper<Target, Class extends ClassOf<Target>> extends StaticMethodDescribeHelper<Class> {
 	constructor(
 		protected readonly bootstrap: () => Target,
-		cls: ClassOf<Target>
+		cls: Class
 	) {
 		super(cls);
 	}
@@ -86,7 +86,7 @@ export class MethodDescribeHelper<Target> extends StaticMethodDescribeHelper<Tar
 	}
 	
 	createDescribe() {
-		const result = this.createMethodDescribe(describe) as MethodSuite<Target>;
+		const result = this.createMethodDescribe(describe) as MethodSuite<Target, Class>;
 		result.skip = this.createMethodDescribe(describe.skip);
 		result.only = this.createMethodDescribe(describe.only);
 		result.static = this.createStaticDescribe();
@@ -99,17 +99,17 @@ export interface BaseMethodSuite<Target> {
 	(methodName: keyof Target, fn: (it: MethodTestFunction<Target>, getTarget: () => Target) => void);
 }
 
-export interface MethodSuite<Target> extends BaseMethodSuite<Target> {
+export interface MethodSuite<Target, Class extends ClassOf<Target>> extends BaseMethodSuite<Target> {
 	only: BaseMethodSuite<Target>;
 	skip: BaseMethodSuite<Target>;
-	static: StaticMethodSuite<Target>;
+	static: StaticMethodSuite<Class>;
 }
 
-export interface BaseStaticMethodSuite<Target> {
-	(methodName: keyof ClassOf<Target>, fn: (it: TestFunction) => void);
+export interface BaseStaticMethodSuite<Class> {
+	(methodName: keyof Class, fn: (it: TestFunction) => void);
 }
 
-export interface StaticMethodSuite<Target> extends BaseStaticMethodSuite<Target> {
-	only: BaseStaticMethodSuite<Target>;
-	skip: BaseStaticMethodSuite<Target>;
+export interface StaticMethodSuite<Class> extends BaseStaticMethodSuite<Class> {
+	only: BaseStaticMethodSuite<Class>;
+	skip: BaseStaticMethodSuite<Class>;
 }
