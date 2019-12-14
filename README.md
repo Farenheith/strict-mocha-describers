@@ -36,3 +36,38 @@ First, rather than inform a description of the test to *describeClass*, we passe
 Now, look that *describeMethod* is called to create a suite case to wrap all case tests of one method. It receives the name of said method and it callback receives a parameter called *target*, which will be the instance of *HelloWorldService*, ready to be tested only for the helloWorld method.
 
 If hello world method calls any other method of HelloWorldService, it must be mocked, otherwise an error will occur
+
+You can also create tests for static method using this describers:
+
+```
+    describeMethod.static('staticHelloWorld', it => {
+        it('should print hello world', () => {
+            sinon.stub(console, 'log');
+
+            const result = HelloWorldService.staticHelloWorld();
+
+            expect(console.log).to.have.been.calledOnceWithExactly('hello world');
+            expect(result).to.be.undefined;
+        });
+```
+
+Just notice that there is no target parameter in this example, as there is no need for an instance in this test
+
+Finally, you can also start a suite case for a class using the function *describeStaticClass*. The only difference is that the parameter passed to the callback function is already the static function tester. A test for static methods with this, therefore, will look like this:
+
+```
+import { describeStaticClass } from 'strict-mocha-descriers';
+
+describeStaticClass(HelloWorldService, describeStaticMethod => {
+    describeStaticMethod('helloWorld', it => {
+        it('should print hello world', () => {
+            sinon.stub(console, 'log');
+
+            const result = HelloWorldService.helloWorld();
+
+            expect(console.log).to.have.been.calledOnceWithExactly('hello world');
+            expect(result).to.be.undefined;
+        });
+    });
+});
+```
