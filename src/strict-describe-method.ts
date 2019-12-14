@@ -22,14 +22,14 @@ export class MethodDescribeHelper<Target> {
 						method
 					);
 				});
-	
+
+				fn(it);
+
 				afterEach(() => {
 					for (const pair of backup) {
 						(wrapper.target as any)[pair[0]] = pair[1];
 					}
 				});
-
-				fn(it)
 			});
 		}
 	}
@@ -45,14 +45,14 @@ export class MethodDescribeHelper<Target> {
 						method
 					);
 				});
+	
+				fn(it);
 
 				afterEach(() => {
 					for (const pair of backup) {
 						(this.cls as any)[pair[0]] = pair[1];
 					}
 				});
-	
-				fn(it)
 			});
 		}
 	}
