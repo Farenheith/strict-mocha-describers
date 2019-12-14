@@ -2,10 +2,38 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 const strict_describers_1 = require("./strict-describers");
 const strict_it_1 = require("./strict-it");
-class MethodDescribeHelper {
-    constructor(bootstrap, cls) {
-        this.bootstrap = bootstrap;
+class StaticMethodDescribeHelper {
+    constructor(cls) {
         this.cls = cls;
+    }
+    createSingleStaticDescribe(suite) {
+        return (method, fn) => {
+            suite(`static method ${method}`, () => {
+                let backup;
+                beforeEach(() => {
+                    backup = strict_describers_1.testUtils.prepare(this.cls, this.cls, method);
+                });
+                fn(it);
+                afterEach(() => {
+                    for (const pair of backup) {
+                        this.cls[pair[0]] = pair[1];
+                    }
+                });
+            });
+        };
+    }
+    createStaticDescribe() {
+        const result = this.createSingleStaticDescribe(describe);
+        result.skip = this.createSingleStaticDescribe(describe.skip);
+        result.only = this.createSingleStaticDescribe(describe.only);
+        return result;
+    }
+}
+exports.StaticMethodDescribeHelper = StaticMethodDescribeHelper;
+class MethodDescribeHelper extends StaticMethodDescribeHelper {
+    constructor(bootstrap, cls) {
+        super(cls);
+        this.bootstrap = bootstrap;
     }
     createMethodDescribe(suite) {
         return (method, fn) => {
@@ -27,29 +55,11 @@ class MethodDescribeHelper {
             });
         };
     }
-    createStaticDescribe(suite) {
-        return (method, fn) => {
-            suite(`static method ${method}`, () => {
-                let backup;
-                beforeEach(() => {
-                    backup = strict_describers_1.testUtils.prepare(this.cls, this.cls, method);
-                });
-                fn(it);
-                afterEach(() => {
-                    for (const pair of backup) {
-                        this.cls[pair[0]] = pair[1];
-                    }
-                });
-            });
-        };
-    }
     createDescribe() {
         const result = this.createMethodDescribe(describe);
         result.skip = this.createMethodDescribe(describe.skip);
         result.only = this.createMethodDescribe(describe.only);
-        result.static = this.createStaticDescribe(describe);
-        result.static.skip = this.createStaticDescribe(describe.skip);
-        result.static.only = this.createStaticDescribe(describe.only);
+        result.static = this.createStaticDescribe();
         return result;
     }
 }

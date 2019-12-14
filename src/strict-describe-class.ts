@@ -1,15 +1,30 @@
 import { describe } from 'mocha';
 import { ClassOf } from './strict-describers';
-import { MethodSuite, MethodDescribeHelper } from './strict-describe-method';
+import { MethodSuite, MethodDescribeHelper, StaticMethodSuite, StaticMethodDescribeHelper } from './strict-describe-method';
 
-export function mountDescribeClass<Target>(
+export function mountClassDescribe<Target>(
 	cls: ClassOf<Target>,
 	bootStrap: () => Target,
 	fn: (describe: MethodSuite<Target>) => void,
+	suite: (description: string, fn: () => void) => void,
 ) {
 	const methodDescribeHelper = new MethodDescribeHelper(bootStrap, cls);
 
-	fn(methodDescribeHelper.createDescribe());
+	suite(`class ${cls.name}`, () => {
+		fn(methodDescribeHelper.createDescribe());
+	});
+}
+
+export function mountStaticClassDescribe<Target>(
+	cls: ClassOf<Target>,
+	fn: (describe: StaticMethodSuite<Target>) => void,
+	suite: (description: string, fn: () => void) => void,
+) {
+	const methodDescribeHelper = new StaticMethodDescribeHelper(cls);
+
+	suite(`static class ${cls.name}`, () => {
+		fn(methodDescribeHelper.createStaticDescribe());
+	});
 }
 
 /**
@@ -30,14 +45,12 @@ export function mountDescribeClass<Target>(
  * will throw an error. This behavior helps to eliminate scope invasion during the tests, and you're assured that no other code
  * other than the method being tested will run.
  */
-export function describeClass<Target, Services>	(
+export function describeClass<Target>	(
 	cls: ClassOf<Target>,
 	bootStrapper: () => Target,
 	fn: (describe: MethodSuite<Target>) => void
 ) {
-	describe(`Class ${cls.name}`, () => {
-		mountDescribeClass<Target>(cls, bootStrapper, fn);
-	});
+	mountClassDescribe<Target>(cls, bootStrapper, fn, describe)
 }
 
 export namespace describeClass {
@@ -46,9 +59,7 @@ export namespace describeClass {
 		bootStrapper: () => Target,
 		fn: (describe: MethodSuite<Target>) => void
 	) {
-		describe.only(`Class ${cls.name}`, () => {
-			mountDescribeClass<Target>(cls, bootStrapper, fn);
-		});
+		mountClassDescribe<Target>(cls, bootStrapper, fn, describe.only)
 	}
 
 	export function skip<Target>	(
@@ -56,10 +67,29 @@ export namespace describeClass {
 		bootStrapper: () => Target,
 		fn: (describe: MethodSuite<Target>) => void
 	) {
-		describe.skip(`Class ${cls.name}`, () => {
-			mountDescribeClass<Target>(cls, bootStrapper, fn);
-		});
+		mountClassDescribe<Target>(cls, bootStrapper, fn, describe.skip)
 	}
 }
 
-(describe as any).class = describeClass;
+export function describeStaticClass<Target>	(
+	cls: ClassOf<Target>,
+	fn: (describe: StaticMethodSuite<Target>) => void
+) {
+	mountStaticClassDescribe<Target>(cls, fn, describe);
+}
+
+export namespace describeStaticClass {
+	export function only<Target>	(
+		cls: ClassOf<Target>,
+		fn: (describe: StaticMethodSuite<Target>) => void
+	) {
+		mountStaticClassDescribe<Target>(cls, fn, describe.only);
+	}
+
+	export function skip<Target>	(
+		cls: ClassOf<Target>,
+		fn: (describe: StaticMethodSuite<Target>) => void
+	) {
+		mountStaticClassDescribe<Target>(cls, fn, describe.skip);
+	}
+}

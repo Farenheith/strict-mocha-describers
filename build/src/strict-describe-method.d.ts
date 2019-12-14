@@ -1,12 +1,16 @@
 import { TestFunction } from "mocha";
 import { ClassOf } from "./strict-describers";
 import { MethodTestFunction } from "./strict-it";
-export declare class MethodDescribeHelper<Target> {
-    private readonly bootstrap;
-    private readonly cls;
+export declare class StaticMethodDescribeHelper<Target> {
+    protected readonly cls: ClassOf<Target>;
+    constructor(cls: ClassOf<Target>);
+    createSingleStaticDescribe(suite: (title: string, fn: () => void) => void): (method: "prototype" | "name", fn: (it: TestFunction) => void) => void;
+    createStaticDescribe(): StaticMethodSuite<Target>;
+}
+export declare class MethodDescribeHelper<Target> extends StaticMethodDescribeHelper<Target> {
+    protected readonly bootstrap: () => Target;
     constructor(bootstrap: () => Target, cls: ClassOf<Target>);
     createMethodDescribe(suite: (title: string, fn: () => void) => void): (method: keyof Target, fn: (it: MethodTestFunction<Target>) => void) => void;
-    createStaticDescribe(suite: (title: string, fn: () => void) => void): (method: "prototype" | "name", fn: (it: TestFunction) => void) => void;
     createDescribe(): MethodSuite<Target>;
 }
 export interface BaseMethodSuite<Target> {

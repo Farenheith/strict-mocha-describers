@@ -2,11 +2,20 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 const mocha_1 = require("mocha");
 const strict_describe_method_1 = require("./strict-describe-method");
-function mountDescribeClass(cls, bootStrap, fn) {
+function mountClassDescribe(cls, bootStrap, fn, suite) {
     const methodDescribeHelper = new strict_describe_method_1.MethodDescribeHelper(bootStrap, cls);
-    fn(methodDescribeHelper.createDescribe());
+    suite(`class ${cls.name}`, () => {
+        fn(methodDescribeHelper.createDescribe());
+    });
 }
-exports.mountDescribeClass = mountDescribeClass;
+exports.mountClassDescribe = mountClassDescribe;
+function mountStaticClassDescribe(cls, fn, suite) {
+    const methodDescribeHelper = new strict_describe_method_1.StaticMethodDescribeHelper(cls);
+    suite(`static class ${cls.name}`, () => {
+        fn(methodDescribeHelper.createStaticDescribe());
+    });
+}
+exports.mountStaticClassDescribe = mountStaticClassDescribe;
 /**
  * A describer to create a Test Suite for a single class.
  * Using this describer is way to enforce a strict organization in the unit test,
@@ -26,24 +35,31 @@ exports.mountDescribeClass = mountDescribeClass;
  * other than the method being tested will run.
  */
 function describeClass(cls, bootStrapper, fn) {
-    mocha_1.describe(`Class ${cls.name}`, () => {
-        mountDescribeClass(cls, bootStrapper, fn);
-    });
+    mountClassDescribe(cls, bootStrapper, fn, mocha_1.describe);
 }
 exports.describeClass = describeClass;
 (function (describeClass) {
     function only(cls, bootStrapper, fn) {
-        mocha_1.describe.only(`Class ${cls.name}`, () => {
-            mountDescribeClass(cls, bootStrapper, fn);
-        });
+        mountClassDescribe(cls, bootStrapper, fn, mocha_1.describe.only);
     }
     describeClass.only = only;
     function skip(cls, bootStrapper, fn) {
-        mocha_1.describe.skip(`Class ${cls.name}`, () => {
-            mountDescribeClass(cls, bootStrapper, fn);
-        });
+        mountClassDescribe(cls, bootStrapper, fn, mocha_1.describe.skip);
     }
     describeClass.skip = skip;
 })(describeClass = exports.describeClass || (exports.describeClass = {}));
-mocha_1.describe.class = describeClass;
+function describeStaticClass(cls, fn) {
+    mountStaticClassDescribe(cls, fn, mocha_1.describe);
+}
+exports.describeStaticClass = describeStaticClass;
+(function (describeStaticClass) {
+    function only(cls, fn) {
+        mountStaticClassDescribe(cls, fn, mocha_1.describe.only);
+    }
+    describeStaticClass.only = only;
+    function skip(cls, fn) {
+        mountStaticClassDescribe(cls, fn, mocha_1.describe.skip);
+    }
+    describeStaticClass.skip = skip;
+})(describeStaticClass = exports.describeStaticClass || (exports.describeStaticClass = {}));
 //# sourceMappingURL=strict-describe-class.js.map

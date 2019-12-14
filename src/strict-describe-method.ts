@@ -2,10 +2,48 @@ import { TestFunction } from "mocha";
 import { ClassOf, testUtils } from "./strict-describers";
 import { MethodTestFunction, TestWrapper, ItHelper } from "./strict-it";
 
-export class MethodDescribeHelper<Target> {
+export class StaticMethodDescribeHelper<Target> {
+	constructor(protected readonly cls: ClassOf<Target>) { }
+
+	createSingleStaticDescribe(suite: (title: string, fn: () => void) => void) {
+		return (method: keyof ClassOf<Target>, fn: (it: TestFunction) => void) => {
+			suite(`static method ${method}`, () => {
+				let backup: Array<[string, Function]>;
+				beforeEach(() => {
+					backup = testUtils.prepare(
+						this.cls,
+						this.cls,
+						method
+					);
+				});
+	
+				fn(it);
+
+				afterEach(() => {
+					for (const pair of backup) {
+						(this.cls as any)[pair[0]] = pair[1];
+					}
+				});
+			});
+		}
+	}
+
+	createStaticDescribe() {
+		const result = this.createSingleStaticDescribe(describe) as StaticMethodSuite<Target>;
+		result.skip = this.createSingleStaticDescribe(describe.skip);
+		result.only = this.createSingleStaticDescribe(describe.only);
+
+		return result;
+	}
+}
+
+export class MethodDescribeHelper<Target> extends StaticMethodDescribeHelper<Target> {
 	constructor(
-		private readonly bootstrap: () => Target,
-		private readonly cls: ClassOf<Target>) { }
+		protected readonly bootstrap: () => Target,
+		cls: ClassOf<Target>
+	) {
+		super(cls);
+	}
 
 	createMethodDescribe(suite: (title: string, fn: () => void) => void) {
 		return (method: keyof Target, fn: (it: MethodTestFunction<Target>) => void) => {
@@ -33,37 +71,12 @@ export class MethodDescribeHelper<Target> {
 			});
 		}
 	}
-
-	createStaticDescribe(suite: (title: string, fn: () => void) => void) {
-		return (method: keyof ClassOf<Target>, fn: (it: TestFunction) => void) => {
-			suite(`static method ${method}`, () => {
-				let backup: Array<[string, Function]>;
-				beforeEach(() => {
-					backup = testUtils.prepare(
-						this.cls,
-						this.cls,
-						method
-					);
-				});
 	
-				fn(it);
-
-				afterEach(() => {
-					for (const pair of backup) {
-						(this.cls as any)[pair[0]] = pair[1];
-					}
-				});
-			});
-		}
-	}
-
 	createDescribe() {
 		const result = this.createMethodDescribe(describe) as MethodSuite<Target>;
 		result.skip = this.createMethodDescribe(describe.skip);
 		result.only = this.createMethodDescribe(describe.only);
-		result.static = this.createStaticDescribe(describe) as StaticMethodSuite<Target>;
-		result.static.skip = this.createStaticDescribe(describe.skip);
-		result.static.only = this.createStaticDescribe(describe.only);
+		result.static = this.createStaticDescribe();
 
 		return result;
 	}

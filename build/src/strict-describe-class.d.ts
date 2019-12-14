@@ -1,6 +1,7 @@
 import { ClassOf } from './strict-describers';
-import { MethodSuite } from './strict-describe-method';
-export declare function mountDescribeClass<Target>(cls: ClassOf<Target>, bootStrap: () => Target, fn: (describe: MethodSuite<Target>) => void): void;
+import { MethodSuite, StaticMethodSuite } from './strict-describe-method';
+export declare function mountClassDescribe<Target>(cls: ClassOf<Target>, bootStrap: () => Target, fn: (describe: MethodSuite<Target>) => void, suite: (description: string, fn: () => void) => void): void;
+export declare function mountStaticClassDescribe<Target>(cls: ClassOf<Target>, fn: (describe: StaticMethodSuite<Target>) => void, suite: (description: string, fn: () => void) => void): void;
 /**
  * A describer to create a Test Suite for a single class.
  * Using this describer is way to enforce a strict organization in the unit test,
@@ -19,8 +20,13 @@ export declare function mountDescribeClass<Target>(cls: ClassOf<Target>, bootStr
  * will throw an error. This behavior helps to eliminate scope invasion during the tests, and you're assured that no other code
  * other than the method being tested will run.
  */
-export declare function describeClass<Target, Services>(cls: ClassOf<Target>, bootStrapper: () => Target, fn: (describe: MethodSuite<Target>) => void): void;
+export declare function describeClass<Target>(cls: ClassOf<Target>, bootStrapper: () => Target, fn: (describe: MethodSuite<Target>) => void): void;
 export declare namespace describeClass {
     function only<Target>(cls: ClassOf<Target>, bootStrapper: () => Target, fn: (describe: MethodSuite<Target>) => void): void;
     function skip<Target>(cls: ClassOf<Target>, bootStrapper: () => Target, fn: (describe: MethodSuite<Target>) => void): void;
+}
+export declare function describeStaticClass<Target>(cls: ClassOf<Target>, fn: (describe: StaticMethodSuite<Target>) => void): void;
+export declare namespace describeStaticClass {
+    function only<Target>(cls: ClassOf<Target>, fn: (describe: StaticMethodSuite<Target>) => void): void;
+    function skip<Target>(cls: ClassOf<Target>, fn: (describe: StaticMethodSuite<Target>) => void): void;
 }
