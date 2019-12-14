@@ -2,7 +2,7 @@
   "name": "strict-mocha-describers",
   "version": "1.0.0",
   "description": "The implementation of describers strongly oriented to the methods that will be tested",
-  "main": "build/src/index.js",
+  "main": "index.js",
   "directories": {
     "bin": "build",
     "test": "src",
