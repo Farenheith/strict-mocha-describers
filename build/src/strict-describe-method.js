@@ -18,12 +18,12 @@ class MethodDescribeHelper {
                     wrapper.target = this.bootstrap();
                     backup = strict_describers_1.testUtils.prepare(wrapper.target, this.cls.prototype, method);
                 });
+                fn(it);
                 afterEach(() => {
                     for (const pair of backup) {
                         wrapper.target[pair[0]] = pair[1];
                     }
                 });
-                fn(it);
             });
         };
     }
@@ -34,12 +34,12 @@ class MethodDescribeHelper {
                 beforeEach(() => {
                     backup = strict_describers_1.testUtils.prepare(this.cls, this.cls, method);
                 });
+                fn(it);
                 afterEach(() => {
                     for (const pair of backup) {
                         this.cls[pair[0]] = pair[1];
                     }
                 });
-                fn(it);
             });
         };
     }
