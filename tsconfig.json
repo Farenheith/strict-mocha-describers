@@ -10,7 +10,8 @@
       "moduleResolution": "node",
       "experimentalDecorators": true,
       "emitDecoratorMetadata": true,
-      "noImplicitAny": false
+      "noImplicitAny": false,
+      "types": ["mocha", "sinon", "chai", "sinon-chai"]
     },
     "include": [
       "src/*.ts",

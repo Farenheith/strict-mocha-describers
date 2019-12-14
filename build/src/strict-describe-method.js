@@ -41,15 +41,20 @@ class MethodDescribeHelper extends StaticMethodDescribeHelper {
             const itHelper = new strict_it_1.ItHelper(wrapper);
             const it = itHelper.createIt();
             let backup;
+            let staticBackup;
             suite(`method ${method}`, () => {
                 beforeEach(() => {
                     wrapper.target = this.bootstrap();
                     backup = strict_describers_1.testUtils.prepare(wrapper.target, this.cls.prototype, method);
+                    staticBackup = strict_describers_1.testUtils.prepare(this.cls, this.cls);
                 });
                 fn(it);
                 afterEach(() => {
                     for (const pair of backup) {
                         wrapper.target[pair[0]] = pair[1];
+                    }
+                    for (const pair of staticBackup) {
+                        this.cls[pair[0]] = pair[1];
                     }
                 });
             });

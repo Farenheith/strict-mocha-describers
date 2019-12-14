@@ -1,43 +1,38 @@
 # strict-mocha-describers
 
-The implementation of describers and assertions strongly oriented for the methods that will be tested
+This project implements over mocha strictly describers for creation of suite tests of classes.
 
 ## How it works
 
 When these describers are used to write your test, all other methods from the class other than the method that will be tested are overwritten by a default error with the message _not mocked yet_. The idea is to enforce that all these calls must be mocked and to make the test always break when some refactoring is made or a new method is called.
 
-it is intended to be used with *mocha chai sinon* triad.
+## How to use it
 
-## Available describers
+The sintax is almost the same as you would use with mocha, but we have a special describe method for classes called *describeClass* which will be the start for any suite case created with this package. Look the following example
 
-### method
-A describer to create the tests of a single method of a instance;
+```
+import { describeClass } from 'strict-mocha-descriers';
 
-### method.only
+function bootStrap() {
+    return new HelloWorldService();
+}
 
-Same as **method**, but will make only the current test to be ran
+describeClass(HelloWorldService, bootstrap, describeMethod => {
+    describeMethod('helloWorld', it => {
+        it('should print hello world', target => {
+            sinon.stub(console, 'log');
 
-### method.skip
+            const result = target.helloWorld();
 
-Same as **method**, but will make the current test to be skipped.
+            expect(console.log).to.have.been.calledOnceWithExactly('hello world');
+            expect(result).to.be.undefined;
+        });
+    });
+});
+```
 
-### method.static
+First, rather than inform a description of the test to *describeClass*, we passed the class that we want to test. Also, as a second parameter, we passed a function that will be used to instantiate the target instance for each test. Finally, the callback to write each method suite case. Look that this callback receives a function as a parameter: *describeMethod*.
 
-A describer to create the tests of a single static method.
+Now, look that *describeMethod* is called to create a suite case to wrap all case tests of one method. It receives the name of said method and it callback receives a parameter called *target*, which will be the instance of *HelloWorldService*, ready to be tested only for the helloWorld method.
 
-### method.static.only
-
-Same as **method.static**, but will make only the current test to be ran.
-
-### method.static.skip
-
-Same as **method.static**, but will make the current test to be skipped.
-
-## Available assertions
-
-### expectCall
-
-Will validate the exactly interaction with the mocked method, which is:
-* How many times has been called;
-* Which parameters have been passed to it;
-* In what order the calls happened.
+If hello world method calls any other method of HelloWorldService, it must be mocked, otherwise an error will occur

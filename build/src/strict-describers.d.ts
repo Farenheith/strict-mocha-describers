@@ -3,7 +3,7 @@ export declare type ClassOf<T> = (new () => T) & {
     name: string;
 };
 export declare const testUtils: {
-    prepare<T>(service: T, prototype: T, methodToTest: keyof T): [string, Function][];
+    prepare<T>(service: T, prototype: T, methodToTest?: keyof T | undefined): [string, Function][];
     mountTest<T_1>(service: () => T_1, prototype: T_1, methodName: keyof T_1, callback: () => any): void;
 };
 export declare function describeMethod<T>(service: () => T, cls: ClassOf<T>, methodName: keyof T, callback: () => any): void;

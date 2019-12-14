@@ -7,7 +7,6 @@ const sinonChai = require("sinon-chai");
 const strictDescribers = require("./strict-describers");
 const mocha_1 = require("mocha");
 const chai_1 = require("chai");
-const expect_call_1 = require("./expect-call");
 chai.use(sinonChai);
 class Test {
     constructor() {
@@ -134,11 +133,11 @@ mocha_1.describe('strict-describers', () => {
             });
             mocha_1.it('should mount a test describer correctly', () => {
                 const result = strictDescribers.testUtils.mountTest(service, Test.prototype, 'method1', callback);
-                expect_call_1.expectCall(mocha.beforeEach, [sinon.match.func]);
-                expect_call_1.expectCall(service, []);
-                expect_call_1.expectCall(strictDescribers.testUtils.prepare, [test, Test.prototype, 'method1']);
-                expect_call_1.expectCall(callback, []);
-                expect_call_1.expectCall(mocha.afterEach, [sinon.match.func]);
+                chai_1.expect(mocha.beforeEach).calledOnceWithExactly(sinon.match.func);
+                chai_1.expect(service).calledOnceWithExactly();
+                chai_1.expect(strictDescribers.testUtils.prepare).calledOnceWithExactly(test, Test.prototype, 'method1');
+                chai_1.expect(callback).calledOnceWithExactly();
+                chai_1.expect(mocha.afterEach).calledOnceWithExactly(sinon.match.func);
                 chai_1.expect(result).eq(undefined);
                 chai_1.expect(test.test1).eq('value1');
                 chai_1.expect(test.test2).eq('value2');
@@ -165,9 +164,9 @@ mocha_1.describe('strict-describers', () => {
                 const test = new Test();
                 const createInstance = () => test;
                 const result = strictDescribers.describeMethod(createInstance, Test, 'method1', callback);
-                expect_call_1.expectCall(mocha.describe, [`Method method1`, sinon.match.func]);
-                expect_call_1.expectCall(strictDescribers.testUtils.mountTest, [createInstance, Test.prototype, 'method1', sinon.match.func]);
-                expect_call_1.expectCall(callback, []);
+                chai_1.expect(mocha.describe).calledOnceWithExactly(`Method method1`, sinon.match.func);
+                chai_1.expect(strictDescribers.testUtils.mountTest).calledOnceWithExactly(createInstance, Test.prototype, 'method1', sinon.match.func);
+                chai_1.expect(callback).calledOnceWithExactly();
                 chai_1.expect(actualService).to.be.eq(test);
                 chai_1.expect(result).to.be.eq(undefined);
             });
@@ -191,9 +190,9 @@ mocha_1.describe('strict-describers', () => {
                 const test = new Test();
                 const createInstance = () => test;
                 const result = strictDescribers.describeMethodOnly(createInstance, Test, 'method1', callback);
-                expect_call_1.expectCall(mocha.describe.only, [`Method method1`, sinon.match.func]);
-                expect_call_1.expectCall(strictDescribers.testUtils.mountTest, [createInstance, Test.prototype, 'method1', sinon.match.func]);
-                expect_call_1.expectCall(callback, []);
+                chai_1.expect(mocha.describe.only).calledOnceWithExactly(`Method method1`, sinon.match.func);
+                chai_1.expect(strictDescribers.testUtils.mountTest).calledOnceWithExactly(createInstance, Test.prototype, 'method1', sinon.match.func);
+                chai_1.expect(callback).calledOnceWithExactly();
                 chai_1.expect(actualService).to.be.eq(test);
                 chai_1.expect(result).to.be.eq(undefined);
             });
@@ -217,9 +216,9 @@ mocha_1.describe('strict-describers', () => {
                 const test = new Test();
                 const createInstance = () => test;
                 const result = strictDescribers.describeMethodSkip(createInstance, Test, 'method1', callback);
-                expect_call_1.expectCall(mocha.describe.skip, [`Method method1`, sinon.match.func]);
-                expect_call_1.expectCall(strictDescribers.testUtils.mountTest, [createInstance, Test.prototype, 'method1', sinon.match.func]);
-                expect_call_1.expectCall(callback, []);
+                chai_1.expect(mocha.describe.skip).calledOnceWithExactly(`Method method1`, sinon.match.func);
+                chai_1.expect(strictDescribers.testUtils.mountTest).calledOnceWithExactly(createInstance, Test.prototype, 'method1', sinon.match.func);
+                chai_1.expect(callback).calledOnceWithExactly();
                 chai_1.expect(actualService).to.be.eq(test);
                 chai_1.expect(result).to.be.eq(undefined);
             });
@@ -243,9 +242,9 @@ mocha_1.describe('strict-describers', () => {
             });
             mocha_1.it('should call describe', () => {
                 const result = strictDescribers.describeStaticMethod(Test, 'staticMethod1', callback);
-                expect_call_1.expectCall(mocha.describe, [`Static method staticMethod1`, sinon.match.func]);
-                expect_call_1.expectCall(strictDescribers.testUtils.mountTest, [sinon.match.func, Test, 'staticMethod1', callback]);
-                expect_call_1.expectCall(callback, []);
+                chai_1.expect(mocha.describe).calledOnceWithExactly(`Static method staticMethod1`, sinon.match.func);
+                chai_1.expect(strictDescribers.testUtils.mountTest).calledOnceWithExactly(sinon.match.func, Test, 'staticMethod1', callback);
+                chai_1.expect(callback).calledOnceWithExactly();
                 chai_1.expect(actualService).to.be.eq(Test);
                 chai_1.expect(result).to.be.eq(undefined);
             });
@@ -267,9 +266,9 @@ mocha_1.describe('strict-describers', () => {
             });
             mocha_1.it('should call describe', () => {
                 const result = strictDescribers.describeStaticMethodOnly(Test, 'staticMethod1', callback);
-                expect_call_1.expectCall(mocha.describe.only, [`Static method staticMethod1`, sinon.match.func]);
-                expect_call_1.expectCall(strictDescribers.testUtils.mountTest, [sinon.match.func, Test, 'staticMethod1', callback]);
-                expect_call_1.expectCall(callback, []);
+                chai_1.expect(mocha.describe.only).calledOnceWithExactly(`Static method staticMethod1`, sinon.match.func);
+                chai_1.expect(strictDescribers.testUtils.mountTest).calledOnceWithExactly(sinon.match.func, Test, 'staticMethod1', callback);
+                chai_1.expect(callback).calledOnceWithExactly();
                 chai_1.expect(actualService).to.be.eq(Test);
                 chai_1.expect(result).to.be.eq(undefined);
             });
@@ -291,9 +290,9 @@ mocha_1.describe('strict-describers', () => {
             });
             mocha_1.it('should call describe', () => {
                 const result = strictDescribers.describeStaticMethodSkip(Test, 'staticMethod1', callback);
-                expect_call_1.expectCall(mocha.describe.skip, [`Static method staticMethod1`, sinon.match.func]);
-                expect_call_1.expectCall(strictDescribers.testUtils.mountTest, [sinon.match.func, Test, 'staticMethod1', callback]);
-                expect_call_1.expectCall(callback, []);
+                chai_1.expect(mocha.describe.skip).calledOnceWithExactly(`Static method staticMethod1`, sinon.match.func);
+                chai_1.expect(strictDescribers.testUtils.mountTest).calledOnceWithExactly(sinon.match.func, Test, 'staticMethod1', callback);
+                chai_1.expect(callback).calledOnceWithExactly();
                 chai_1.expect(actualService).to.be.eq(Test);
                 chai_1.expect(result).to.be.eq(undefined);
             });

@@ -51,6 +51,7 @@ export class MethodDescribeHelper<Target> extends StaticMethodDescribeHelper<Tar
 			const itHelper = new ItHelper(wrapper);
 			const it = itHelper.createIt();
 			let backup: Array<[string, Function]>;
+			let staticBackup: Array<[string, Function]>;
 			suite(`method ${method}`, () => {
 				beforeEach(() => {
 					wrapper.target = this.bootstrap();
@@ -59,6 +60,10 @@ export class MethodDescribeHelper<Target> extends StaticMethodDescribeHelper<Tar
 						this.cls.prototype,
 						method
 					);
+					staticBackup = testUtils.prepare(
+						this.cls,
+						this.cls,
+					);
 				});
 
 				fn(it);
@@ -66,6 +71,9 @@ export class MethodDescribeHelper<Target> extends StaticMethodDescribeHelper<Tar
 				afterEach(() => {
 					for (const pair of backup) {
 						(wrapper.target as any)[pair[0]] = pair[1];
+					}
+					for (const pair of staticBackup) {
+						(this.cls as any)[pair[0]] = pair[1];
 					}
 				});
 			});
