@@ -19,8 +19,8 @@ export declare function mountDescribeClass<Target>(cls: ClassOf<Target>, bootStr
  * will throw an error. This behavior helps to eliminate scope invasion during the tests, and you're assured that no other code
  * other than the method being tested will run.
  */
-export declare function describeClass<Target, Services>(cls: ClassOf<Target>, bootStrapper: () => Target, fn: () => void): void;
+export declare function describeClass<Target, Services>(cls: ClassOf<Target>, bootStrapper: () => Target, fn: (describe: MethodSuite<Target>) => void): void;
 export declare namespace describeClass {
-    function only<Target>(cls: ClassOf<Target>, bootStrapper: () => Target, fn: () => void): void;
-    function skip<Target>(cls: ClassOf<Target>, bootStrapper: () => Target, fn: () => void): void;
+    function only<Target>(cls: ClassOf<Target>, bootStrapper: () => Target, fn: (describe: MethodSuite<Target>) => void): void;
+    function skip<Target>(cls: ClassOf<Target>, bootStrapper: () => Target, fn: (describe: MethodSuite<Target>) => void): void;
 }

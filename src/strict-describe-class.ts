@@ -33,7 +33,7 @@ export function mountDescribeClass<Target>(
 export function describeClass<Target, Services>	(
 	cls: ClassOf<Target>,
 	bootStrapper: () => Target,
-	fn: () => void
+	fn: (describe: MethodSuite<Target>) => void
 ) {
 	describe(`Class ${cls.name}`, () => {
 		mountDescribeClass<Target>(cls, bootStrapper, fn);
@@ -44,7 +44,7 @@ export namespace describeClass {
 	export function only<Target>	(
 		cls: ClassOf<Target>,
 		bootStrapper: () => Target,
-		fn: () => void
+		fn: (describe: MethodSuite<Target>) => void
 	) {
 		describe.only(`Class ${cls.name}`, () => {
 			mountDescribeClass<Target>(cls, bootStrapper, fn);
@@ -54,7 +54,7 @@ export namespace describeClass {
 	export function skip<Target>	(
 		cls: ClassOf<Target>,
 		bootStrapper: () => Target,
-		fn: () => void
+		fn: (describe: MethodSuite<Target>) => void
 	) {
 		describe.skip(`Class ${cls.name}`, () => {
 			mountDescribeClass<Target>(cls, bootStrapper, fn);
