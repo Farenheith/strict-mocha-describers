@@ -2,7 +2,6 @@ import { it as mochaIt } from "mocha";
 
 export interface TestWrapper<Target> {
 	target: Target;
-	it: MethodTestFunction<Target>;
 }
 
 export class ItHelper<Target> {

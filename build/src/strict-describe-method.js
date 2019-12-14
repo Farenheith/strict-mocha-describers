@@ -10,12 +10,12 @@ class MethodDescribeHelper {
     createMethodDescribe(suite) {
         return (method, fn) => {
             const wrapper = {};
+            const itHelper = new strict_it_1.ItHelper(wrapper);
+            const it = itHelper.createIt();
             let backup;
             suite(`method ${method}`, () => {
                 beforeEach(() => {
                     wrapper.target = this.bootstrap();
-                    const itHelper = new strict_it_1.ItHelper(wrapper);
-                    wrapper.it = itHelper.createIt();
                     backup = strict_describers_1.testUtils.prepare(wrapper.target, this.cls.prototype, method);
                 });
                 afterEach(() => {
@@ -23,7 +23,7 @@ class MethodDescribeHelper {
                         wrapper.target[pair[0]] = pair[1];
                     }
                 });
-                fn(wrapper.it);
+                fn(it);
             });
         };
     }

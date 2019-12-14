@@ -1,4 +1,4 @@
-import { TestFunction, SuiteFunction } from "mocha";
+import { TestFunction } from "mocha";
 import { ClassOf, testUtils } from "./strict-describers";
 import { MethodTestFunction, TestWrapper, ItHelper } from "./strict-it";
 
@@ -10,12 +10,12 @@ export class MethodDescribeHelper<Target> {
 	createMethodDescribe(suite: (title: string, fn: () => void) => void) {
 		return (method: keyof Target, fn: (it: MethodTestFunction<Target>) => void) => {
 			const wrapper = {} as TestWrapper<Target>;
+			const itHelper = new ItHelper(wrapper);
+			const it = itHelper.createIt();
 			let backup: Array<[string, Function]>;
 			suite(`method ${method}`, () => {
 				beforeEach(() => {
 					wrapper.target = this.bootstrap();
-					const itHelper = new ItHelper(wrapper);
-					wrapper.it = itHelper.createIt();
 					backup = testUtils.prepare(
 						wrapper.target,
 						this.cls.prototype,
@@ -29,7 +29,7 @@ export class MethodDescribeHelper<Target> {
 					}
 				});
 
-				fn(wrapper.it)
+				fn(it)
 			});
 		}
 	}
