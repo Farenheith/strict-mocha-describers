@@ -1,4 +1,4 @@
-export declare type ClassOf<T> = (new () => T) & {
+export declare type ClassOf<T> = (new (...params: any[]) => T) & {
     prototype: T;
     name: string;
 };

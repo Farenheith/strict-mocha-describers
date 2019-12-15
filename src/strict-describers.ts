@@ -1,6 +1,6 @@
 import * as mocha from 'mocha';
 
-export type ClassOf<T> = (new () => T) & { prototype: T, name: string };
+export type ClassOf<T> = (new (...params: any[]) => T) & { prototype: T, name: string };
 
 export const testUtils = {
 	prepare<T>(service: T, prototype: T, methodToTest?: keyof T) {
