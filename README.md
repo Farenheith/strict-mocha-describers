@@ -10,7 +10,7 @@ When these describers are used to write your test, all other methods from the cl
 
 The sintax is almost the same as you would use with mocha, but we have a special describe method for classes called *describeClass* which will be the start for any suite case created with this package. Look the following example
 
-```
+```Typescript
 import { describeClass } from 'strict-mocha-descriers';
 
 function bootStrap() {
@@ -34,7 +34,7 @@ describeClass(HelloWorldService, bootstrap, describeMethod => {
 You can also control the access for target and mocked services using variables declared in your source code:
 
 
-```
+```Typescript
 import { describeClass } from 'strict-mocha-descriers';
 
 let target: HelloWorldService;
@@ -68,7 +68,7 @@ If hello world method calls any other method of HelloWorldService, it must be mo
 
 You can also create tests for static method using this describers:
 
-```
+```Typescript
     describeMethod.static('staticHelloWorld', it => {
         it('should print hello world', () => {
             sinon.stub(console, 'log');
@@ -84,7 +84,7 @@ Just notice that there is no target parameter in this example, as there is no ne
 
 Finally, you can also start a suite case for a class using the function *describeStaticClass*. The only difference is that the parameter passed to the callback function is already the static function tester. A test for static methods with this, therefore, will look like this:
 
-```
+```Typescript
 import { describeStaticClass } from 'strict-mocha-descriers';
 
 describeStaticClass(HelloWorldService, describeStaticMethod => {
