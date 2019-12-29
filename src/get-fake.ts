@@ -18,8 +18,10 @@ beforeEach(() => {
 });
 
 afterEach(() => {
-	cleanups.forEach(x => x());
-	cleanups = undefined;
+	if (cleanups) {
+		cleanups.forEach(x => x());
+		cleanups = undefined;
+	}
 });
 
 export function fakeStaticClass<Target>(cls: Target) {

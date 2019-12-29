@@ -66,14 +66,14 @@ describe('strict-describers', () => {
 				} catch (err) {
 					error = err;
 				}
-				expect(error!.message).to.be.eq('Not mocked yet');
+				expect(error!.message).to.be.eq('method1 not mocked yet');
 				error = undefined;
 				try {
 					obj.method3();
 				} catch (err) {
 					error = err;
 				}
-				expect(error!.message).to.be.eq('Not mocked yet');
+				expect(error!.message).to.be.eq('method3 not mocked yet');
 				expect(obj.method2()).to.be.eq('result2');
 			});
     
@@ -90,7 +90,7 @@ describe('strict-describers', () => {
 				} catch (err) {
 					error = err;
 				}
-				expect(error!.message).to.be.eq('Not mocked yet');
+				expect(error!.message).to.be.eq('method3 not mocked yet');
 				expect(obj.method2()).to.be.eq('result2');
 			});
 
@@ -104,14 +104,14 @@ describe('strict-describers', () => {
 				} catch (err) {
 					error = err;
 				}
-				expect(error!.message).to.be.eq('Not mocked yet');
+				expect(error!.message).to.be.eq('staticMethod1 not mocked yet');
 				error = undefined;
 				try {
 					Test.staticMethod3();
 				} catch (err) {
 					error = err;
 				}
-				expect(error!.message).to.be.eq('Not mocked yet');
+				expect(error!.message).to.be.eq('staticMethod3 not mocked yet');
 				expect(Test.staticMethod2()).to.be.eq('static result2');
 			});
     
@@ -127,7 +127,7 @@ describe('strict-describers', () => {
 				} catch (err) {
 					error = err;
 				}
-				expect(error!.message).to.be.eq('Not mocked yet');
+				expect(error!.message).to.be.eq('staticMethod3 not mocked yet');
 				expect(Test.staticMethod2()).to.be.eq('static result2');
 			});
 		});

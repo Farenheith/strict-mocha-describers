@@ -1,6 +1,6 @@
 {
   "name": "strict-mocha-describers",
-  "version": "1.2.0",
+  "version": "1.2.2",
   "description": "The implementation of describers strongly oriented to the methods that will be tested",
   "main": "build/index.js",
   "directories": {
@@ -17,7 +17,8 @@
     "build": "run-build",
     "lint": "run-lint",
     "build:dev": "run-build-dev",
-    "test:coverage:lcovonly": "run-test-lcov"
+    "test:coverage:lcovonly": "run-test-lcov",
+    "prepublish": "npm run build"
   },
   "repository": {
     "type": "git",

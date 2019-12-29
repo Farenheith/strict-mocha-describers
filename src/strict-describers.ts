@@ -79,7 +79,7 @@ export const testUtils = {
 	},
 	
 	getMockedMethod<T>(name: keyof T): T[keyof T] {
-		const result: T[keyof T] = eval(`(function ${name} () { throw new Error('Not mocked yet'); })`);
+		const result: T[keyof T] = eval(`(function ${name} () { throw new Error('${name} not mocked yet'); })`);
 		return result;
 	}
 };
