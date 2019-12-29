@@ -45,6 +45,7 @@ function describeClass(cls, bootStrapper, fn) {
     mountClassDescribe(cls, bootStrapper, fn, mocha_1.describe);
 }
 exports.describeClass = describeClass;
+// tslint:disable-next-line: no-namespace
 (function (describeClass) {
     function only(cls, bootStrapper, fn) {
         mountClassDescribe(cls, bootStrapper, fn, mocha_1.describe.only);
@@ -59,6 +60,7 @@ function describeStaticClass(cls, fn) {
     mountStaticClassDescribe(cls, fn, mocha_1.describe);
 }
 exports.describeStaticClass = describeStaticClass;
+// tslint:disable-next-line: no-namespace
 (function (describeStaticClass) {
     function only(cls, fn) {
         mountStaticClassDescribe(cls, fn, mocha_1.describe.only);
@@ -73,6 +75,7 @@ function describeSruct(struct, description, fn) {
     mountSructDescribe(struct, description, fn, mocha_1.describe);
 }
 exports.describeSruct = describeSruct;
+// tslint:disable-next-line: no-namespace
 (function (describeSruct) {
     function only(struct, description, fn) {
         mountSructDescribe(struct, description, fn, mocha_1.describe.only);

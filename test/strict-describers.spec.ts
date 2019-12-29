@@ -2,7 +2,7 @@ import * as chai from 'chai';
 import * as mocha from 'mocha';
 import * as sinon from 'sinon';
 import * as sinonChai from 'sinon-chai';
-import * as strictDescribers from './strict-describers';
+import * as strictDescribers from '../src/strict-describers';
 
 import { afterEach, beforeEach, describe, it } from 'mocha';
 
@@ -142,9 +142,9 @@ describe('strict-describers', () => {
 				sinon.stub(mocha, 'beforeEach').callsFake(x => (x as any)());
 				callback = sinon.stub();
 				sinon.stub(strictDescribers.testUtils, 'prepare').returns([
-				['test1', 'value1' as any],
-					['test2', 'value2' as any],
-				]);
+				['test1', 'value1'],
+					['test2', 'value2'],
+				] as any);
 				sinon.stub(mocha, 'afterEach').callsFake(x => (x as any)());
 			});
 

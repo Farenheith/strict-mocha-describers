@@ -22,9 +22,9 @@ exports.testUtils = {
         }
         methods.forEach((m) => {
             backup.push([m, service[m]]);
-            service[m] = () => {
+            service[m] = (() => {
                 throw new Error('Not mocked yet');
-            };
+            });
         });
         return backup;
     },

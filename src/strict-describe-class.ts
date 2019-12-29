@@ -66,6 +66,7 @@ export function describeClass<Target, Class extends ClassOf<Target>>	(
 	mountClassDescribe<Target, Class>(cls, bootStrapper, fn, describe)
 }
 
+// tslint:disable-next-line: no-namespace
 export namespace describeClass {
 	export function only<Target, Class extends ClassOf<Target>>	(
 		cls: Class,
@@ -91,6 +92,7 @@ export function describeStaticClass<Target, Class extends ClassOf<Target>>	(
 	mountStaticClassDescribe<Target, Class>(cls, fn, describe);
 }
 
+// tslint:disable-next-line: no-namespace
 export namespace describeStaticClass {
 	export function only<Target, Class extends ClassOf<Target>>	(
 		cls: Class,
@@ -117,6 +119,7 @@ export function describeSruct<Struct>	(
 	mountSructDescribe<Struct>(struct, description, fn, describe);
 }
 
+// tslint:disable-next-line: no-namespace
 export namespace describeSruct {
 	export function only<Struct>	(
 		struct: Struct,

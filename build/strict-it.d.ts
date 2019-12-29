@@ -8,7 +8,7 @@ export declare class ItHelper<Target> {
     createIt(): MethodTestFunction<Target>;
 }
 export interface BaseInstanceTestFunction<Target> {
-    (description: string, callback: (target: Target) => any): any;
+    (description: string, callback: (target: Target) => unknown): any;
 }
 export interface MethodTestFunction<Target> extends BaseInstanceTestFunction<Target> {
     only: BaseInstanceTestFunction<Target>;

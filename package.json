@@ -12,9 +12,12 @@
     "build/**/*"
   ],
   "scripts": {
-    "test": "mocha --require ts-node/register --recursive \"**/*.spec.ts\"",
-    "test:coverage": "nyc npm test",
-    "build": "tsc -p ."
+    "test": "run-test",
+    "test:coverage": "run-test-coverage",
+    "build": "run-build",
+    "lint": "run-lint",
+    "build:dev": "run-build-dev",
+    "test:coverage:lcovonly": "run-test-lcov"
   },
   "repository": {
     "type": "git",
@@ -27,20 +30,11 @@
   },
   "homepage": "https://github.com/Farenheith/strict-mocha-describers#readme",
   "devDependencies": {
-    "@types/chai": "^4.2.4",
-    "@types/mocha": "^5.2.7",
-    "@types/sinon": "^7.5.0",
     "@types/sinon-chai": "^3.2.3",
-    "gts": "^1.1.0",
-    "nyc": "^14.1.1",
-    "ts-node": "^8.4.1",
-    "tslint": "^5.20.0",
-    "typescript": "^3.6.4",
-    "chai": "^4.2.0",
-    "sinon-chai": "^3.3.0",
-    "sinon": "^7.5.0"
+    "sinon-chai": "^3.3.0"
   },
   "dependencies": {
+    "base-project-config": "^1.1.0",
     "mocha": "^6.2.2"
   }
 }

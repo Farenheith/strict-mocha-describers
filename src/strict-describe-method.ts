@@ -1,5 +1,5 @@
 import { TestFunction } from "mocha";
-import { ClassOf, testUtils } from "./strict-describers";
+import { ClassOf, testUtils, MethodBackup } from "./strict-describers";
 import { MethodTestFunction, TestWrapper, ItHelper } from "./strict-it";
 
 export class StaticMethodDescribeHelper<Class> {
@@ -8,7 +8,7 @@ export class StaticMethodDescribeHelper<Class> {
 	createSingleStaticDescribe(suite: (title: string, fn: () => void) => void) {
 		return (method: keyof Class, fn: (it: TestFunction) => void) => {
 			suite(`static method ${method}`, () => {
-				let backup: Array<[string, Function]>;
+				let backup: Array<[keyof Class, Class[keyof Class]]>;
 				beforeEach(() => {
 					backup = testUtils.prepare(
 						this.cls,
@@ -21,7 +21,7 @@ export class StaticMethodDescribeHelper<Class> {
 
 				afterEach(() => {
 					for (const pair of backup) {
-						(this.cls as any)[pair[0]] = pair[1];
+						this.cls[pair[0]] = pair[1];
 					}
 				});
 			});
@@ -55,8 +55,8 @@ export class MethodDescribeHelper<Target, Class extends ClassOf<Target>> extends
 			const wrapper = {} as TestWrapper<Target>;
 			const itHelper = new ItHelper(wrapper);
 			const it = itHelper.createIt();
-			let backup: Array<[string, Function]>;
-			let staticBackup: Array<[string, Function]>;
+			let backup: Array<MethodBackup<Target>>;
+			let staticBackup: Array<MethodBackup<Class>>;
 			suite(`method ${method}`, () => {
 				beforeEach(() => {
 					wrapper.target = this.bootstrap();
@@ -75,10 +75,10 @@ export class MethodDescribeHelper<Target, Class extends ClassOf<Target>> extends
 
 				afterEach(() => {
 					for (const pair of backup) {
-						(wrapper.target as any)[pair[0]] = pair[1];
+						wrapper.target[pair[0]] = pair[1];
 					}
 					for (const pair of staticBackup) {
-						(this.cls as any)[pair[0]] = pair[1];
+						this.cls[pair[0]] = pair[1];
 					}
 				});
 			});

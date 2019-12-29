@@ -17,13 +17,13 @@ export class ItHelper<Target> {
 
 	createIt() {
 		const result = this.createSuiteCase(
-			mochaIt as any, 
+			mochaIt as unknown as () => void | PromiseLike<void>, 
 		) as MethodTestFunction<Target>;
 		result.only = this.createSuiteCase(
-			mochaIt.only as any, 
+			mochaIt.only as unknown as () => void | PromiseLike<void>,
 		) as MethodTestFunction<Target>;
 		result.skip = this.createSuiteCase(
-			mochaIt.skip as any, 
+			mochaIt.skip as unknown as () => void | PromiseLike<void>,
 		) as MethodTestFunction<Target>;
 
 		return result;
@@ -31,7 +31,7 @@ export class ItHelper<Target> {
 }
 
 export interface BaseInstanceTestFunction<Target> {
-	(description: string, callback: (target: Target) => any);
+	(description: string, callback: (target: Target) => unknown);
 }
 
 export interface MethodTestFunction<Target> extends BaseInstanceTestFunction<Target> {
