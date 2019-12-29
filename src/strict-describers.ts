@@ -1,6 +1,7 @@
 import * as mocha from 'mocha';
 
-export type ClassOf<T> = (new (...params: unknown[]) => T) & { prototype: T, name: string };
+// tslint:disable-next-line: no-any
+export type ClassOf<T> = (new (...params: any[]) => T) & { prototype: T, name: string };
 export type MethodBackup<T> = [keyof T, T[keyof T]];
 
 export const testUtils = {
