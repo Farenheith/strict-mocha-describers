@@ -14,7 +14,7 @@ export declare class MethodDescribeHelper<Target, Class extends ClassOf<Target>>
     createDescribe(): MethodSuite<Target, Class>;
 }
 export interface BaseMethodSuite<Target> {
-    (methodName: keyof Target, fn: (it: MethodTestFunction<Target>, getTarget: () => Target) => void): any;
+    (methodName: keyof Target, fn: (it: MethodTestFunction<Target>, getTarget: () => Target) => void): void;
 }
 export interface MethodSuite<Target, Class extends ClassOf<Target>> extends BaseMethodSuite<Target> {
     only: BaseMethodSuite<Target>;
@@ -22,7 +22,7 @@ export interface MethodSuite<Target, Class extends ClassOf<Target>> extends Base
     static: StaticMethodSuite<Class>;
 }
 export interface BaseStaticMethodSuite<Class> {
-    (methodName: keyof Class, fn: (it: TestFunction) => void): any;
+    (methodName: keyof Class, fn: (it: TestFunction) => void): void;
 }
 export interface StaticMethodSuite<Class> extends BaseStaticMethodSuite<Class> {
     only: BaseStaticMethodSuite<Class>;

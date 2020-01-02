@@ -16,7 +16,7 @@ export class StaticMethodDescribeHelper<Class> {
 						method
 					);
 				});
-	
+
 				fn(it);
 
 				afterEach(() => {
@@ -84,7 +84,7 @@ export class MethodDescribeHelper<Target, Class extends ClassOf<Target>> extends
 			});
 		}
 	}
-	
+
 	createDescribe() {
 		const result = this.createMethodDescribe(describe) as MethodSuite<Target, Class>;
 		result.skip = this.createMethodDescribe(describe.skip);
@@ -96,7 +96,7 @@ export class MethodDescribeHelper<Target, Class extends ClassOf<Target>> extends
 }
 
 export interface BaseMethodSuite<Target> {
-	(methodName: keyof Target, fn: (it: MethodTestFunction<Target>, getTarget: () => Target) => void);
+	(methodName: keyof Target, fn: (it: MethodTestFunction<Target>, getTarget: () => Target) => void): void;
 }
 
 export interface MethodSuite<Target, Class extends ClassOf<Target>> extends BaseMethodSuite<Target> {
@@ -106,7 +106,7 @@ export interface MethodSuite<Target, Class extends ClassOf<Target>> extends Base
 }
 
 export interface BaseStaticMethodSuite<Class> {
-	(methodName: keyof Class, fn: (it: TestFunction) => void);
+	(methodName: keyof Class, fn: (it: TestFunction) => void): void;
 }
 
 export interface StaticMethodSuite<Class> extends BaseStaticMethodSuite<Class> {
