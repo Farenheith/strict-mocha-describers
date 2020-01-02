@@ -12,13 +12,13 @@
     "build/**/*"
   ],
   "scripts": {
-    "test": "run-test",
-    "test:coverage": "run-test-coverage",
-    "build": "run-build",
     "lint": "run-lint",
-    "build:dev": "run-build-dev",
+    "prebuild": "run-pre-build",
+    "build": "run-build",
+    "test:coverage": "run-test-coverage",
     "test:coverage:lcovonly": "run-test-lcov",
-    "prepublish": "npm run build"
+    "test:coverage:json": "run-test-json",
+    "test": "run-test"
   },
   "repository": {
     "type": "git",
@@ -35,7 +35,7 @@
     "sinon-chai": "^3.3.0"
   },
   "dependencies": {
-    "base-project-config": "^1.1.0",
+    "base-project-config": "github:farenheith/base-project-config",
     "mocha": "^6.2.2"
   }
 }
