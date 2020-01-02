@@ -32,10 +32,10 @@
   "homepage": "https://github.com/Farenheith/strict-mocha-describers#readme",
   "devDependencies": {
     "@types/sinon-chai": "^3.2.3",
+    "base-project-config": "^1.1.3",
     "sinon-chai": "^3.3.0"
   },
   "dependencies": {
-    "base-project-config": "^1.1.3",
     "mocha": "^6.2.2"
   }
 }
