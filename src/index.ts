@@ -1,0 +1,1 @@
+import './strict-mocha-describers';
