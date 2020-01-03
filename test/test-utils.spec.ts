@@ -15,9 +15,7 @@ class Test {
 		return 'result2';
 	}
 
-	method3() {
-		return 'result3';
-	}
+	method3 = () => 'result3';
 
 	static staticMethod1() {
 		return 'static result1';

@@ -1,16 +1,16 @@
 import { TestFunction } from "mocha";
-import { TestWrapper, ItHelper, backupHelper } from "./strict-it";
 import { MethodTestFunction } from "./types/method-test-function";
 import { testUtils } from "./test-utils";
 import { ClassOf } from "./types/class-of";
-import { MethodBackup } from "./types/method-backup";
 import { MethodSuite } from "./types/method-suite";
 import { StaticMethodSuite } from "./types/static-method-suite";
+import { backupHelper } from "./backup-helper";
+import { ItHelper } from "./it-helper";
 
 export class StaticMethodDescribeHelper<Class> {
 	constructor(protected readonly cls: Class) { }
 
-	createSingleStaticDescribe(suite: (title: string, fn: () => void) => void) {
+	private createSingleStaticDescribe = (suite: (title: string, fn: () => void) => void) => {
 		return (method: keyof Class, fn: (it: TestFunction) => void) => {
 			suite(`Static method ${method}`, () => {
 				const wrapper = {} as { backup: Array<[keyof Class, Class[keyof Class]]> };
@@ -36,7 +36,7 @@ export class StaticMethodDescribeHelper<Class> {
 	}
 
 	createStaticDescribe() {
-		return testUtils.setupFunction(this.createSingleStaticDescribe.bind(this), describe) as StaticMethodSuite<Class>;
+		return testUtils.setupFunction(this.createSingleStaticDescribe, describe) as StaticMethodSuite<Class>;
 	}
 }
 
@@ -48,7 +48,7 @@ export class MethodDescribeHelper<Target, Class extends ClassOf<Target>> extends
 		super(cls);
 	}
 
-	createMethodDescribe(suite: (title: string, fn: () => void) => void) {
+	private createMethodDescribe = (suite: (title: string, fn: () => void) => void) => {
 		return (method: keyof Target,
 			fn: (
 					it: MethodTestFunction<Target>,
@@ -61,7 +61,7 @@ export class MethodDescribeHelper<Target, Class extends ClassOf<Target>> extends
 			suite(`Method ${method}`, () => {
 				beforeEach(itHelper.beforeEach);
 
-				fn(it, () => itHelper.wrapper.target);
+				fn(it, () => itHelper.target);
 
 				afterEach(itHelper.afterEach);
 			});
@@ -69,7 +69,7 @@ export class MethodDescribeHelper<Target, Class extends ClassOf<Target>> extends
 	}
 
 	createDescribe() {
-		return testUtils.setupFunction(this.createMethodDescribe.bind(this), describe) as MethodSuite<Target, Class>;
+		return testUtils.setupFunction(this.createMethodDescribe, describe) as MethodSuite<Target, Class>;
 	}
 }
 

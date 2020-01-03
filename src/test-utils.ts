@@ -12,6 +12,13 @@ export const testUtils = {
 				methods.push(key);
 			}
 		}
+		if (service !== prototype) {
+			for (const key of Object.getOwnPropertyNames(service) as Array<keyof T>) {
+				if (testUtils.isMockable<T>(key, service, service, methodToTest)) {
+					methods.push(key);
+				}
+			}
+		}
 		methods.forEach((m) => {
 			backup.push([m, service[m]]);
 			service[m] = testUtils.getMockedMethod<T>(m);

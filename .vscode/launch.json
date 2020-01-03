@@ -11,7 +11,7 @@
 			"cwd": "${workspaceRoot}",
 			"runtimeArgs": ["-r", "ts-node/register"],
 			"args": [
-                "${workspaceRoot}/src/index.ts"
+                "${workspaceRoot}/src/strict-mocha-describers.ts"
             ]
 		},
         {
@@ -20,7 +20,7 @@
             "name": "Mocha Tests",
             "cwd": "${workspaceRoot}",
             "args": [
-                "${workspaceRoot}/node_modules/.bin/run-test",
+                "${workspaceRoot}/node_modules/base-project-config/bin/run-test",
                 "--timeout", "999999",
             ],
             "outputCapture": "std"

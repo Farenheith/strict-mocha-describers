@@ -2,16 +2,6 @@ import { ClassOf } from "./types/class-of";
 import { beforeEach, afterEach } from 'mocha';
 import { testUtils } from './test-utils';
 
-export function getFakeInstance<Target, Class extends ClassOf<Target>>(cls: Class): Target {
-	const result = {} as { [key in keyof Target]: Target[keyof Target] } & Target;
-	for (const key of Object.getOwnPropertyNames(cls.prototype) as Array<keyof Target>) {
-		if (testUtils.isMockable<Target>(key, cls.prototype, result)) {
-			result[key] = testUtils.getMockedMethod(key);
-		}
-	}
-	return result;
-}
-
 let cleanups: Function[] | undefined;
 
 beforeEach(() => {
@@ -19,10 +9,8 @@ beforeEach(() => {
 });
 
 afterEach(() => {
-	if (cleanups) {
-		cleanups.forEach(x => x());
-		cleanups = undefined;
-	}
+	cleanups!.forEach(x => x());
+	cleanups = undefined;
 });
 
 export function fakeStaticClass<Target>(cls: Target) {
@@ -33,5 +21,11 @@ export function fakeStaticClass<Target>(cls: Target) {
 	const backup = testUtils.prepare(cls, cls);
 
 	cleanups.push(() => testUtils.restoreBackup(backup, cls));
+}
+
+export function getFakeInstance<Target, Class extends ClassOf<Target>>(cls: Class, create?: () => Target): Target {
+	const result = create ? create() : new cls();
+	testUtils.prepare(result, cls.prototype);
+	return result;
 }
 
