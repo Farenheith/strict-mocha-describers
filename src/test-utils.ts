@@ -17,7 +17,7 @@ export const testUtils = {
 		});
 		return backup;
 	},
-	mountStaticTest<T>(cls: T, methodName: keyof T, callback: () => unknown) {
+	mountStaticTest<T>(cls: T, methodName: keyof T, callback: () => void | PromiseLike<void>) {
 		let backup: Array<MethodBackup<T>>;
 		let target: T;
 		mocha.beforeEach(() => {
@@ -29,7 +29,7 @@ export const testUtils = {
 			testUtils.restoreBackup<T>(backup, target);
 		});
 	},
-	mountInstanceTest<T, Class extends ClassOf<T>>(service: () => T, cls: Class, methodName: keyof T, callback: () => unknown) {
+	mountInstanceTest<T, Class extends ClassOf<T>>(service: () => T, cls: Class, methodName: keyof T, callback: () => void | PromiseLike<void>) {
 		let backup: Array<MethodBackup<T>>;
 		let staticBackup: Array<MethodBackup<Class>>;
 		let target: T;
@@ -67,12 +67,12 @@ export const testUtils = {
 		return result;
 	},
 	describeInstanceMethod(describer: Function) {
-		return <T, Class extends ClassOf<T>>(service: () => T, cls: Class, methodName: keyof T, callback: () => unknown) => {
+		return <T, Class extends ClassOf<T>>(service: () => T, cls: Class, methodName: keyof T, callback: () => void | PromiseLike<void>) => {
 			describer(`Method ${methodName}`, () => testUtils.mountInstanceTest(service, cls, methodName, callback));
 		};
 	},
 	describeStaticMethod(describer: Function) {
-		return <Class>(cls: Class, methodName: keyof Class, callback: () => unknown) => {
+		return <Class>(cls: Class, methodName: keyof Class, callback: () => void | PromiseLike<void>) => {
 			describer(`Static method ${methodName}`, () => testUtils.mountStaticTest(cls, methodName, callback));
 		};
 	}

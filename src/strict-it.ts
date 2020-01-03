@@ -1,4 +1,5 @@
 import { it as mochaIt } from "mocha";
+import { MethodTestFunction } from "./types/method-test-function";
 
 export interface TestWrapper<Target> {
 	target: Target;
@@ -7,7 +8,7 @@ export interface TestWrapper<Target> {
 export class ItHelper<Target> {
 	constructor(private readonly targetWrapper: TestWrapper<Target>) { }
 
-	createSuiteCase(testFunction: (description: string, fn: () => void | PromiseLike<void>) => void | PromiseLike<void>) {
+	createSuiteCase(testFunction: Function) {
 		return (description: string, fn: (target: Target) => void | PromiseLike<void>) => {
 			return testFunction(description, () => {
 				return fn(this.targetWrapper.target);
@@ -16,25 +17,12 @@ export class ItHelper<Target> {
 	}
 
 	createIt() {
-		const result = this.createSuiteCase(
-			mochaIt as unknown as () => void | PromiseLike<void>,
-		) as MethodTestFunction<Target>;
-		result.only = this.createSuiteCase(
-			mochaIt.only as unknown as () => void | PromiseLike<void>,
-		) as MethodTestFunction<Target>;
-		result.skip = this.createSuiteCase(
-			mochaIt.skip as unknown as () => void | PromiseLike<void>,
-		) as MethodTestFunction<Target>;
+		const result = this.createSuiteCase(mochaIt) as MethodTestFunction<Target>;
+		result.only = this.createSuiteCase(mochaIt.only);
+		result.skip = this.createSuiteCase(mochaIt.skip);
 
 		return result;
 	}
 }
 
-export interface BaseInstanceTestFunction<Target> {
-	(description: string, callback: (target: Target) => unknown): void | PromiseLike<void>;
-}
 
-export interface MethodTestFunction<Target> extends BaseInstanceTestFunction<Target> {
-	only: BaseInstanceTestFunction<Target>;
-	skip: BaseInstanceTestFunction<Target>;
-}

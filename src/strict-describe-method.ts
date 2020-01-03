@@ -1,5 +1,6 @@
 import { TestFunction } from "mocha";
-import { MethodTestFunction, TestWrapper, ItHelper } from "./strict-it";
+import { TestWrapper, ItHelper } from "./strict-it";
+import { MethodTestFunction } from "./types/method-test-function";
 import { testUtils } from "./test-utils";
 import { ClassOf } from "./types/class-of";
 import { MethodBackup } from "./types/method-backup";
