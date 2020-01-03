@@ -1,15 +1,10 @@
-import * as chai from 'chai';
 import * as mocha from 'mocha';
 import * as sinon from 'sinon';
-import * as sinonChai from 'sinon-chai';
 import * as strictDescribers from '../src/strict-describers';
 
 import { afterEach, beforeEach, describe, it } from 'mocha';
 
 import { expect } from 'chai';
-
-chai.use(sinonChai);
-
 class Test {
 	property1 = 'teste';
 
@@ -37,12 +32,8 @@ class Test {
 		return 'static result3';
 	}
 }
-  
-describe('strict-describers', () => {
-	afterEach(() => {
-		sinon.restore();
-	});
 
+describe('strict-describers', () => {
 	describe('method', () => {
 		it('should map describers functions correctly', () => {
 			expect(strictDescribers.method.only).eq(strictDescribers.describeMethodOnly);
@@ -58,9 +49,9 @@ describe('strict-describers', () => {
 			it('should remove all instance methods except method2', () => {
 				const obj = new Test();
 				let error: Error | undefined;
-    
+
 				strictDescribers.testUtils.prepare(obj, Test.prototype, 'method2');
-    
+
 				try {
 					obj.method1();
 				} catch (err) {
@@ -76,14 +67,14 @@ describe('strict-describers', () => {
 				expect(error!.message).to.be.eq('method3 not mocked yet');
 				expect(obj.method2()).to.be.eq('result2');
 			});
-    
+
 			it('should replace behavior of instance method', () => {
 				const obj = new Test();
 				let error: Error | undefined;
-    
+
 				strictDescribers.testUtils.prepare(obj, Test.prototype, 'method2');
 				sinon.stub(obj, 'method1').returns('mocked');
-    
+
 				expect(obj.method1()).to.be.eq('mocked');
 				try {
 					obj.method3();
@@ -96,9 +87,9 @@ describe('strict-describers', () => {
 
 			it('should remove all static methods except method2', () => {
 				let error: Error | undefined;
-    
+
 				strictDescribers.testUtils.prepare(Test, Test, 'staticMethod2');
-    
+
 				try {
 					Test.staticMethod1();
 				} catch (err) {
@@ -114,13 +105,13 @@ describe('strict-describers', () => {
 				expect(error!.message).to.be.eq('staticMethod3 not mocked yet');
 				expect(Test.staticMethod2()).to.be.eq('static result2');
 			});
-    
+
 			it('should replace behavior of static method', () => {
 				let error: Error | undefined;
-    
+
 				strictDescribers.testUtils.prepare(Test, Test, 'staticMethod2');
 				sinon.stub(Test, 'staticMethod1').returns('mocked');
-    
+
 				expect(Test.staticMethod1()).to.be.eq('mocked');
 				try {
 					Test.staticMethod3();
@@ -131,7 +122,7 @@ describe('strict-describers', () => {
 				expect(Test.staticMethod2()).to.be.eq('static result2');
 			});
 		});
-    
+
 		describe('mountInstanceTest', () => {
 			const test = new Test();
 			let callback: sinon.SinonStub;
@@ -164,7 +155,7 @@ describe('strict-describers', () => {
 				expect((test as any).test2).eq('value2');
 			});
 		});
-    
+
 		describe('mountStaticTest', () => {
 			let callback: sinon.SinonStub;
 
