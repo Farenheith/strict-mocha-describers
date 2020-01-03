@@ -1,5 +1,5 @@
 import { TestFunction } from "mocha";
-import { TestWrapper, ItHelper } from "./strict-it";
+import { TestWrapper, ItHelper, backupHelper } from "./strict-it";
 import { MethodTestFunction } from "./types/method-test-function";
 import { testUtils } from "./test-utils";
 import { ClassOf } from "./types/class-of";
@@ -13,24 +13,26 @@ export class StaticMethodDescribeHelper<Class> {
 	createSingleStaticDescribe(suite: (title: string, fn: () => void) => void) {
 		return (method: keyof Class, fn: (it: TestFunction) => void) => {
 			suite(`Static method ${method}`, () => {
-				let backup: Array<[keyof Class, Class[keyof Class]]>;
-				beforeEach(() => {
-					backup = testUtils.prepare(
-						this.cls,
-						this.cls,
-						method
-					);
-				});
+				const wrapper = {} as { backup: Array<[keyof Class, Class[keyof Class]]> };
+				beforeEach(this.getBeforeEach(wrapper, method));
 
 				fn(it);
 
-				afterEach(() => {
-					for (const pair of backup) {
-						this.cls[pair[0]] = pair[1];
-					}
-				});
+				afterEach(this.getAfterEach(wrapper));
 			});
 		}
+	}
+
+	private getAfterEach(wrapper: { backup: Array<[keyof Class, Class[keyof Class]]>; }): Mocha.Func {
+		return () => {
+			backupHelper.restore(this.cls, wrapper.backup);
+		};
+	}
+
+	private getBeforeEach(wrapper: { backup: Array<[keyof Class, Class[keyof Class]]>; }, method: keyof Class): Mocha.Func {
+		return () => {
+			wrapper.backup = testUtils.prepare(this.cls, this.cls, method);
+		};
 	}
 
 	createStaticDescribe() {
@@ -53,35 +55,15 @@ export class MethodDescribeHelper<Target, Class extends ClassOf<Target>> extends
 					getTarget: () => Target,
 				) => void
 		) => {
-			const wrapper = {} as TestWrapper<Target>;
-			const itHelper = new ItHelper(wrapper);
+			const itHelper = new ItHelper(this.cls, this.bootstrap, method);
 			const it = itHelper.createIt();
-			let backup: Array<MethodBackup<Target>>;
-			let staticBackup: Array<MethodBackup<Class>>;
+
 			suite(`Method ${method}`, () => {
-				beforeEach(() => {
-					wrapper.target = this.bootstrap();
-					backup = testUtils.prepare(
-						wrapper.target,
-						this.cls.prototype,
-						method
-					);
-					staticBackup = testUtils.prepare(
-						this.cls,
-						this.cls,
-					);
-				});
+				beforeEach(itHelper.beforeEach);
 
-				fn(it, () => wrapper.target);
+				fn(it, () => itHelper.wrapper.target);
 
-				afterEach(() => {
-					for (const pair of backup) {
-						wrapper.target[pair[0]] = pair[1];
-					}
-					for (const pair of staticBackup) {
-						this.cls[pair[0]] = pair[1];
-					}
-				});
+				afterEach(itHelper.afterEach);
 			});
 		}
 	}
