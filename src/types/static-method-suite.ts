@@ -1,5 +1,4 @@
+import { BaseMochaType } from './base-mocha-function';
 import { BaseStaticMethodSuite } from "./base-static-method-suite";
-export interface StaticMethodSuite<Class> extends BaseStaticMethodSuite<Class> {
-	only: BaseStaticMethodSuite<Class>;
-	skip: BaseStaticMethodSuite<Class>;
+export interface StaticMethodSuite<Class> extends BaseMochaType<BaseStaticMethodSuite<Class>> {
 }

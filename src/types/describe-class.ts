@@ -1,3 +1,4 @@
+import { BaseMochaType } from './base-mocha-function';
 import { DescribeStaticClass } from './describe-static-class';
 import { MethodSuite } from "./method-suite";
 import { ClassOf } from "./class-of";
@@ -10,8 +11,6 @@ export interface DescribeClassBase {
 	): void
 }
 
-export interface DescribeClass extends DescribeClassBase {
-	only: DescribeClassBase;
-	skip: DescribeClassBase;
+export interface DescribeClass extends BaseMochaType<DescribeClassBase> {
 	static: DescribeStaticClass;
 }

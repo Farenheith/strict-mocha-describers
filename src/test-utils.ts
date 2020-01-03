@@ -1,4 +1,4 @@
-import { BaseMochaFunction } from './types/base-mocha-function';
+import { BaseMochaType } from './types/base-mocha-function';
 import { MethodBackup } from "./types/method-backup";
 import * as mocha from 'mocha';
 import { ClassOf } from "./types/class-of";
@@ -78,8 +78,8 @@ export const testUtils = {
 		};
 	},
 
-	setupFunction<A extends Function, B extends Function>(transformer: (a: A) => B, mochaBase: A & { skip: A, only: A }) {
-		const result = transformer(mochaBase) as B & { skip: B, only: B };
+	setupFunction<A extends Function, B extends Function>(transformer: (a: A) => B, mochaBase: BaseMochaType<A>) {
+		const result = transformer(mochaBase) as BaseMochaType<B>;
 		result.skip = transformer(mochaBase.skip);
 		result.only = transformer(mochaBase.only);
 

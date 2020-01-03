@@ -1,6 +1,6 @@
 import { StaticMethodSuite } from "./static-method-suite";
-import { MethodSuite } from "./method-suite";
 import { ClassOf } from "./class-of";
+import { BaseMochaType } from "./base-mocha-function";
 
 export interface DescribeStaticClassBase {
 	<Target, Class extends ClassOf<Target>>(
@@ -9,7 +9,5 @@ export interface DescribeStaticClassBase {
 	): void;
 }
 
-export interface DescribeStaticClass extends DescribeStaticClassBase {
-	only: DescribeStaticClassBase;
-	skip: DescribeStaticClassBase;
+export interface DescribeStaticClass extends BaseMochaType<DescribeStaticClassBase> {
 }

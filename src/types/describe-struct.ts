@@ -1,4 +1,5 @@
 import { StaticMethodSuite } from "./static-method-suite";
+import { BaseMochaType } from "./base-mocha-function";
 
 export interface DescribeStructBase {
 	<Struct>	(
@@ -8,7 +9,5 @@ export interface DescribeStructBase {
 	): void;
 }
 
-export interface DescribeStruct extends DescribeStructBase {
-	only: DescribeStructBase;
-	skip: DescribeStructBase;
+export interface DescribeStruct extends BaseMochaType<DescribeStructBase> {
 }

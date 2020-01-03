@@ -1,7 +1,8 @@
 export interface BaseMochaFunction<
-	B extends Function,
-	C extends Function
+	B extends Function
 > extends Function {
 	skip: B;
-	only: C;
+	only: B;
 }
+
+export type BaseMochaType<A extends Function> = A & BaseMochaFunction<A>;
