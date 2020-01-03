@@ -5,7 +5,7 @@ scripts:
   - npm install codecov -g
   - npm run lint
   - npm run build
-  - npm run test:coverage:lcov
+  - npm run test:coverage:lcovonly
 after_success:
   - npx gulp -f ./node_modules/base-project-config/gulpfile-coverage.js
   - codecov
