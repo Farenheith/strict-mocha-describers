@@ -12,7 +12,7 @@ export class StaticMethodDescribeHelper<Class> {
 
 	createSingleStaticDescribe(suite: (title: string, fn: () => void) => void) {
 		return (method: keyof Class, fn: (it: TestFunction) => void) => {
-			suite(`static method ${method}`, () => {
+			suite(`Static method ${method}`, () => {
 				let backup: Array<[keyof Class, Class[keyof Class]]>;
 				beforeEach(() => {
 					backup = testUtils.prepare(
@@ -58,7 +58,7 @@ export class MethodDescribeHelper<Target, Class extends ClassOf<Target>> extends
 			const it = itHelper.createIt();
 			let backup: Array<MethodBackup<Target>>;
 			let staticBackup: Array<MethodBackup<Class>>;
-			suite(`method ${method}`, () => {
+			suite(`Method ${method}`, () => {
 				beforeEach(() => {
 					wrapper.target = this.bootstrap();
 					backup = testUtils.prepare(

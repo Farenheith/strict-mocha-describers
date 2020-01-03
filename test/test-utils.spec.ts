@@ -174,49 +174,4 @@ describe('testUtils', () => {
 			expect((Test as any).test2).eq('value2');
 		});
 	});
-
-	describe('describeInstanceMethod', () => {
-		let describer: sinon.SinonStub<any, any>;
-		let callbackUtils: sinon.SinonStub<any, any>;
-
-		beforeEach(() => {
-			describer = sinon.stub().callsFake(
-				(_method: string, callback: Function) => {
-					callback();
-				});
-			callbackUtils = sinon.stub(testUtils, 'mountInstanceTest');
-		});
-
-		it('should returns function that calls describer passing description "method name" and proper callback', () => {
-			const resultFunction = testUtils.describeInstanceMethod(describer);
-			const service = () => new Test();
-
-			resultFunction(service, Test, 'method1', 'some callback' as any);
-
-			expect(describer).to.have.been.calledOnceWithExactly('Method method1', sinon.match.func);
-			expect(callbackUtils).to.have.been.calledOnceWithExactly(service, Test, 'method1', 'some callback');
-		});
-	});
-
-	describe('describeStaticMethod', () => {
-		let describer: sinon.SinonStub<any, any>;
-		let callbackUtils: sinon.SinonStub<any, any>;
-
-		beforeEach(() => {
-			describer = sinon.stub().callsFake(
-				(_method: string, callback: Function) => {
-					callback();
-				});
-			callbackUtils = sinon.stub(testUtils, 'mountStaticTest');
-		});
-
-		it('should returns function that calls describer passing description "method name" and proper callback', () => {
-			const resultFunction = testUtils.describeStaticMethod(describer);
-
-			resultFunction(Test, 'staticMethod1', 'some callback' as any);
-
-			expect(describer).to.have.been.calledOnceWithExactly('Static method staticMethod1', sinon.match.func);
-			expect(callbackUtils).to.have.been.calledOnceWithExactly(Test, 'staticMethod1', 'some callback');
-		});
-	});
 });

@@ -67,16 +67,6 @@ export const testUtils = {
 		const result: T[keyof T] = eval(`(function ${name} () { throw new Error('${name} not mocked yet'); })`);
 		return result;
 	},
-	describeInstanceMethod(describer: Function) {
-		return <T, Class extends ClassOf<T>>(service: () => T, cls: Class, methodName: keyof T, callback: () => void | PromiseLike<void>) => {
-			describer(`Method ${methodName}`, () => testUtils.mountInstanceTest(service, cls, methodName, callback));
-		};
-	},
-	describeStaticMethod(describer: Function) {
-		return <Class>(cls: Class, methodName: keyof Class, callback: () => void | PromiseLike<void>) => {
-			describer(`Static method ${methodName}`, () => testUtils.mountStaticTest(cls, methodName, callback));
-		};
-	},
 
 	setupFunction<A extends Function, B extends Function>(transformer: (a: A) => B, mochaBase: BaseMochaType<A>) {
 		const result = transformer(mochaBase) as BaseMochaType<B>;
