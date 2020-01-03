@@ -1,6 +1,6 @@
 import { MethodBackup } from "./types/method-backup";
-import { ClassOf } from "./types/Class-of";
 import * as mocha from 'mocha';
+import { ClassOf } from "./types/class-of";
 
 export const testUtils = {
 	prepare<T>(service: T, prototype: T, methodToTest?: keyof T) {

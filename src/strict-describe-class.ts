@@ -1,43 +1,55 @@
+import { DescribeStaticClass } from './types/describe-static-class';
+import { DescribeClass } from './types/describe-class';
 import { describe } from 'mocha';
-import { MethodSuite, MethodDescribeHelper, StaticMethodSuite, StaticMethodDescribeHelper } from './strict-describe-method';
-import { ClassOf } from './types/Class-of';
+import { MethodDescribeHelper, StaticMethodDescribeHelper } from './strict-describe-method';
+import { StaticMethodSuite } from "./types/static-method-suite";
+import { MethodSuite } from "./types/method-suite";
+import { ClassOf } from './types/class-of';
+import { DescribeStruct } from './types/describe-struct';
 
-export function mountClassDescribe<Target, Class extends ClassOf<Target>>(
-	cls: Class,
-	bootStrap: () => Target,
-	fn: (describe: MethodSuite<Target, Class>) => void,
+export function mountClassDescribe(
 	suite: (description: string, fn: () => void) => void,
 ) {
-	const methodDescribeHelper = new MethodDescribeHelper(bootStrap, cls);
+	return <Target, Class extends ClassOf<Target>>(cls: Class,
+		bootStrap: () => Target,
+		fn: (describe: MethodSuite<Target, Class>) => void) => {
+		const methodDescribeHelper = new MethodDescribeHelper(bootStrap, cls);
 
-	suite(`class ${cls.name}`, () => {
-		fn(methodDescribeHelper.createDescribe());
-	});
+		suite(`class ${cls.name}`, () => {
+			fn(methodDescribeHelper.createDescribe());
+		});
+	};
 }
 
-export function mountSructDescribe<Target>(
-	cls: Target,
-	description: string,
-	fn: (describe: StaticMethodSuite<Target>) => void,
+export function mountSructDescribe(
 	suite: (description: string, fn: () => void) => void,
 ) {
-	const methodDescribeHelper = new StaticMethodDescribeHelper(cls);
+	return <Target>(
+		cls: Target,
+		description: string,
+		fn: (describe: StaticMethodSuite<Target>) => void,
+	) => {
+		const methodDescribeHelper = new StaticMethodDescribeHelper(cls);
 
-	suite(description, () => {
-		fn(methodDescribeHelper.createStaticDescribe());
-	});
+		suite(description, () => {
+			fn(methodDescribeHelper.createStaticDescribe());
+		});
+	};
 }
 
-export function mountStaticClassDescribe<Target, Class extends ClassOf<Target>>(
-	cls: Class,
-	fn: (describe: StaticMethodSuite<Class>) => void,
+export function mountStaticClassDescribe(
 	suite: (description: string, fn: () => void) => void,
 ) {
-	const methodDescribeHelper = new StaticMethodDescribeHelper(cls);
+	return <Target, Class extends ClassOf<Target>>(
+		cls: Class,
+		fn: (describe: StaticMethodSuite<Class>) => void,
+	) => {
+		const methodDescribeHelper = new StaticMethodDescribeHelper(cls);
 
-	suite(`static class ${cls.name}`, () => {
-		fn(methodDescribeHelper.createStaticDescribe());
-	});
+		suite(`static class ${cls.name}`, () => {
+			fn(methodDescribeHelper.createStaticDescribe());
+		});
+	};
 }
 
 /**
@@ -58,82 +70,21 @@ export function mountStaticClassDescribe<Target, Class extends ClassOf<Target>>(
  * will throw an error. This behavior helps to eliminate scope invasion during the tests, and you're assured that no other code
  * other than the method being tested will run.
  */
-export function describeClass<Target, Class extends ClassOf<Target>>	(
-	cls: Class,
-	bootStrapper: () => Target,
-	fn: (describe: MethodSuite<Target, Class>) => void
-) {
-	mountClassDescribe<Target, Class>(cls, bootStrapper, fn, describe)
-}
+export const describeStaticClass = mountStaticClassDescribe(describe) as DescribeStaticClass;
 
 // tslint:disable-next-line: no-namespace
-export namespace describeClass {
-	export function only<Target, Class extends ClassOf<Target>>	(
-		cls: Class,
-		bootStrapper: () => Target,
-		fn: (describe: MethodSuite<Target, Class>) => void
-	) {
-		mountClassDescribe<Target, Class>(cls, bootStrapper, fn, describe.only)
-	}
+describeStaticClass.only = mountStaticClassDescribe(describe.only);
+describeStaticClass.skip = mountStaticClassDescribe(describe.skip);
 
-	export function skip<Target, Class extends ClassOf<Target>>	(
-		cls: Class,
-		bootStrapper: () => Target,
-		fn: (describe: MethodSuite<Target, Class>) => void
-	) {
-		mountClassDescribe<Target, Class>(cls, bootStrapper, fn, describe.skip)
-	}
-}
-
-export function describeStaticClass<Target, Class extends ClassOf<Target>>	(
-	cls: Class,
-	fn: (describe: StaticMethodSuite<Class>) => void
-) {
-	mountStaticClassDescribe<Target, Class>(cls, fn, describe);
-}
+export const describeClass = mountClassDescribe(describe) as DescribeClass;
 
 // tslint:disable-next-line: no-namespace
-export namespace describeStaticClass {
-	export function only<Target, Class extends ClassOf<Target>>	(
-		cls: Class,
-		fn: (describe: StaticMethodSuite<Class>) => void
-	) {
-		mountStaticClassDescribe<Target, Class>(cls, fn, describe.only);
-	}
+describeClass.only = mountClassDescribe(describe.only);
+describeClass.skip = mountClassDescribe(describe.skip);
+describeClass.static = describeStaticClass;
 
-	export function skip<Target, Class extends ClassOf<Target>>	(
-		cls: Class,
-		fn: (describe: StaticMethodSuite<Class>) => void
-	) {
-		mountStaticClassDescribe<Target, Class>(cls, fn, describe.skip);
-	}
-}
-
-
-
-export function describeSruct<Struct>	(
-	struct: Struct,
-	description: string,
-	fn: (describe: StaticMethodSuite<Struct>) => void
-) {
-	mountSructDescribe<Struct>(struct, description, fn, describe);
-}
+export const describeStruct = mountSructDescribe(describe) as DescribeStruct;
 
 // tslint:disable-next-line: no-namespace
-export namespace describeSruct {
-	export function only<Struct>	(
-		struct: Struct,
-		description: string,
-		fn: (describe: StaticMethodSuite<Struct>) => void
-	) {
-		mountSructDescribe<Struct>(struct, description, fn, describe.only);
-	}
-
-	export function skip<Struct>	(
-		struct: Struct,
-		description: string,
-		fn: (describe: StaticMethodSuite<Struct>) => void
-	) {
-		mountSructDescribe<Struct>(struct, description, fn, describe.skip);
-	}
-}
+describeStruct.only = mountSructDescribe(describe.only);
+describeStruct.skip = mountSructDescribe(describe.skip);

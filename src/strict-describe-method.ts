@@ -1,8 +1,10 @@
 import { TestFunction } from "mocha";
 import { MethodTestFunction, TestWrapper, ItHelper } from "./strict-it";
 import { testUtils } from "./test-utils";
-import { ClassOf } from "./types/Class-of";
+import { ClassOf } from "./types/class-of";
 import { MethodBackup } from "./types/method-backup";
+import { MethodSuite } from "./types/method-suite";
+import { StaticMethodSuite } from "./types/static-method-suite";
 
 export class StaticMethodDescribeHelper<Class> {
 	constructor(protected readonly cls: Class) { }
@@ -97,21 +99,4 @@ export class MethodDescribeHelper<Target, Class extends ClassOf<Target>> extends
 	}
 }
 
-export interface BaseMethodSuite<Target> {
-	(methodName: keyof Target, fn: (it: MethodTestFunction<Target>, getTarget: () => Target) => void): void;
-}
 
-export interface MethodSuite<Target, Class extends ClassOf<Target>> extends BaseMethodSuite<Target> {
-	only: BaseMethodSuite<Target>;
-	skip: BaseMethodSuite<Target>;
-	static: StaticMethodSuite<Class>;
-}
-
-export interface BaseStaticMethodSuite<Class> {
-	(methodName: keyof Class, fn: (it: TestFunction) => void): void;
-}
-
-export interface StaticMethodSuite<Class> extends BaseStaticMethodSuite<Class> {
-	only: BaseStaticMethodSuite<Class>;
-	skip: BaseStaticMethodSuite<Class>;
-}

@@ -4,8 +4,8 @@ import * as sinon from 'sinon';
 import { beforeEach, it } from 'mocha';
 
 import { expect } from 'chai';
-import { describeSruct } from '../src/strict-describe-class';
-import { ClassOf } from '../src/types/Class-of';
+import { describeStruct } from '../src/strict-describe-class';
+import { ClassOf } from '../src/types/class-of';
 class Test {
 	property1 = 'teste';
 

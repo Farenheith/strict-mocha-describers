@@ -1,4 +1,4 @@
-import { ClassOf } from "./types/Class-of";
+import { ClassOf } from "./types/class-of";
 import { beforeEach, afterEach } from 'mocha';
 import { testUtils } from './test-utils';
 
