@@ -7,18 +7,19 @@ export const testUtils = {
 	prepare<T>(service: T, prototype: T, methodToTest?: keyof T) {
 		const methods: Array<keyof T> = [];
 		const backup: Array<MethodBackup<T>> = [];
-		for (const key of Object.getOwnPropertyNames(prototype) as Array<keyof T>) {
-			if (testUtils.isMockable<T>(key, prototype, service, methodToTest)) {
-				methods.push(key);
-			}
-		}
+		const subjects = [prototype];
 		if (service !== prototype) {
-			for (const key of Object.getOwnPropertyNames(service) as Array<keyof T>) {
-				if (testUtils.isMockable<T>(key, service, service, methodToTest)) {
+				subjects.push(service);
+		}
+
+		for (const subject of subjects ) {
+			for (const key of Object.getOwnPropertyNames(subject) as Array<keyof T>) {
+				if (testUtils.isMockable<T>(key, subject, service, methodToTest)) {
 					methods.push(key);
 				}
 			}
 		}
+
 		methods.forEach((m) => {
 			backup.push([m, service[m]]);
 			service[m] = testUtils.getMockedMethod<T>(m);
