@@ -1,3 +1,4 @@
+import { BaseMochaFunction } from './types/base-mocha-function';
 import { MethodBackup } from "./types/method-backup";
 import * as mocha from 'mocha';
 import { ClassOf } from "./types/class-of";
@@ -75,5 +76,13 @@ export const testUtils = {
 		return <Class>(cls: Class, methodName: keyof Class, callback: () => void | PromiseLike<void>) => {
 			describer(`Static method ${methodName}`, () => testUtils.mountStaticTest(cls, methodName, callback));
 		};
+	},
+
+	setupFunction<A extends Function, B extends Function>(transformer: (a: A) => B, mochaBase: A & { skip: A, only: A }) {
+		const result = transformer(mochaBase) as B & { skip: B, only: B };
+		result.skip = transformer(mochaBase.skip);
+		result.only = transformer(mochaBase.only);
+
+		return result;
 	}
 };

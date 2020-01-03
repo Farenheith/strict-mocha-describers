@@ -1,3 +1,4 @@
+import { testUtils } from './test-utils';
 import { it as mochaIt } from "mocha";
 import { MethodTestFunction } from "./types/method-test-function";
 
@@ -17,11 +18,7 @@ export class ItHelper<Target> {
 	}
 
 	createIt() {
-		const result = this.createSuiteCase(mochaIt) as MethodTestFunction<Target>;
-		result.only = this.createSuiteCase(mochaIt.only);
-		result.skip = this.createSuiteCase(mochaIt.skip);
-
-		return result;
+		return testUtils.setupFunction(this.createSuiteCase.bind(this), mochaIt) as MethodTestFunction<Target>;
 	}
 }
 

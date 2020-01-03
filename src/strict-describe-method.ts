@@ -34,11 +34,7 @@ export class StaticMethodDescribeHelper<Class> {
 	}
 
 	createStaticDescribe() {
-		const result = this.createSingleStaticDescribe(describe) as StaticMethodSuite<Class>;
-		result.skip = this.createSingleStaticDescribe(describe.skip);
-		result.only = this.createSingleStaticDescribe(describe.only);
-
-		return result;
+		return testUtils.setupFunction(this.createSingleStaticDescribe.bind(this), describe) as StaticMethodSuite<Class>;
 	}
 }
 
@@ -91,12 +87,7 @@ export class MethodDescribeHelper<Target, Class extends ClassOf<Target>> extends
 	}
 
 	createDescribe() {
-		const result = this.createMethodDescribe(describe) as MethodSuite<Target, Class>;
-		result.skip = this.createMethodDescribe(describe.skip);
-		result.only = this.createMethodDescribe(describe.only);
-		result.static = this.createStaticDescribe();
-
-		return result;
+		return testUtils.setupFunction(this.createMethodDescribe.bind(this), describe) as MethodSuite<Target, Class>;
 	}
 }
 

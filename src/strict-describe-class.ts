@@ -1,3 +1,4 @@
+import { testUtils } from './test-utils';
 import { DescribeStaticClass } from './types/describe-static-class';
 import { DescribeClass } from './types/describe-class';
 import { describe } from 'mocha';
@@ -70,21 +71,7 @@ export function mountStaticClassDescribe(
  * will throw an error. This behavior helps to eliminate scope invasion during the tests, and you're assured that no other code
  * other than the method being tested will run.
  */
-export const describeStaticClass = mountStaticClassDescribe(describe) as DescribeStaticClass;
-
-// tslint:disable-next-line: no-namespace
-describeStaticClass.only = mountStaticClassDescribe(describe.only);
-describeStaticClass.skip = mountStaticClassDescribe(describe.skip);
-
-export const describeClass = mountClassDescribe(describe) as DescribeClass;
-
-// tslint:disable-next-line: no-namespace
-describeClass.only = mountClassDescribe(describe.only);
-describeClass.skip = mountClassDescribe(describe.skip);
+export const describeStaticClass = testUtils.setupFunction(mountStaticClassDescribe, describe) as DescribeStaticClass;
+export const describeClass = testUtils.setupFunction(mountClassDescribe, describe) as DescribeClass;
 describeClass.static = describeStaticClass;
-
-export const describeStruct = mountSructDescribe(describe) as DescribeStruct;
-
-// tslint:disable-next-line: no-namespace
-describeStruct.only = mountSructDescribe(describe.only);
-describeStruct.skip = mountSructDescribe(describe.skip);
+export const describeStruct = testUtils.setupFunction(mountSructDescribe, describe) as DescribeStruct;
