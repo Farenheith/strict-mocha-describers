@@ -1,6 +1,8 @@
 import { TestFunction } from "mocha";
-import { ClassOf, testUtils, MethodBackup } from "./strict-describers";
 import { MethodTestFunction, TestWrapper, ItHelper } from "./strict-it";
+import { testUtils } from "./test-utils";
+import { ClassOf } from "./types/Class-of";
+import { MethodBackup } from "./types/method-backup";
 
 export class StaticMethodDescribeHelper<Class> {
 	constructor(protected readonly cls: Class) { }

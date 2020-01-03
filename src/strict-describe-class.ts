@@ -1,6 +1,6 @@
 import { describe } from 'mocha';
-import { ClassOf } from './strict-describers';
 import { MethodSuite, MethodDescribeHelper, StaticMethodSuite, StaticMethodDescribeHelper } from './strict-describe-method';
+import { ClassOf } from './types/Class-of';
 
 export function mountClassDescribe<Target, Class extends ClassOf<Target>>(
 	cls: Class,
@@ -44,7 +44,7 @@ export function mountStaticClassDescribe<Target, Class extends ClassOf<Target>>(
  * A describer to create a Test Suite for a single class.
  * Using this describer is way to enforce a strict organization in the unit test,
  * where 3 sections are enforced to be written separetely, defnined by the paremeters this method receives
- * @param cls the class you want to test 
+ * @param cls the class you want to test
  * @param bootStrapper method used to create the target instance for the test and the mocked services.
  * It's recommended for all mocked services to be just empty objects but with the correct type.
  * This way, you can stub each method each 'method test suite' will need and so you can garantee that

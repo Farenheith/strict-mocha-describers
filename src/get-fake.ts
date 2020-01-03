@@ -1,5 +1,6 @@
-import { ClassOf, testUtils } from './strict-describers';
+import { ClassOf } from "./types/Class-of";
 import { beforeEach, afterEach } from 'mocha';
+import { testUtils } from './test-utils';
 
 export function getFakeInstance<Target, Class extends ClassOf<Target>>(cls: Class): Target {
 	const result = {} as { [key in keyof Target]: Target[keyof Target] } & Target;
