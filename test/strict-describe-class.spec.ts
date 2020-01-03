@@ -1,29 +1,13 @@
-import * as methodHelper from './../src/strict-describe-method';
+import * as methodHelper from '../src/method-describe-helper';
+import * as staticMethodHelper from '../src/static-method-describe-helper';
 import { expect } from 'chai';
 import * as getFake from '../src/get-fake';
 import * as strictDescribeClass from '../src/strict-describe-class';
 import * as sinon from 'sinon';
 
-describe('index.ts', () => {
-	it('should export all expected methods', () => {
-		const target = require('../src/strict-mocha-describers');
+class Test { }
 
-		expect(target).to.be.eql({
-			...getFake,
-			...{
-				describeClass: strictDescribeClass.describeClass,
-				describeStaticClass: strictDescribeClass.describeStaticClass,
-				describeStruct: strictDescribeClass.describeStruct,
-			},
-		});
-
-		expect((describe as any).class).to.be.eq(strictDescribeClass.describeClass);
-		expect((describe as any).struct).to.be.eq(strictDescribeClass.describeStruct);
-		expect(strictDescribeClass.describeClass.static).to.be.eq(strictDescribeClass.describeStaticClass);
-	});
-
-	class Test { }
-
+describe('strict-describe-class.ts', () => {
 	describe('mountClassDescribe()', () => {
 		let fn: sinon.SinonStub;
 		let suite: sinon.SinonStub;
@@ -56,7 +40,7 @@ describe('index.ts', () => {
 
 		beforeEach(() => {
 			createStaticDescribe = sinon.stub().returns('createStaticDescribe result' as any);
-			sinon.stub(methodHelper, 'StaticMethodDescribeHelper').returns({ createStaticDescribe });
+			sinon.stub(staticMethodHelper, 'StaticMethodDescribeHelper').returns({ createStaticDescribe });
 			fn = sinon.stub();
 			suite = sinon.stub().callsFake((_description, callback) => callback());
 		});
@@ -67,7 +51,7 @@ describe('index.ts', () => {
 			const result = describer(Test, fn);
 
 			expect(suite).to.have.been.calledOnceWithExactly('static class Test', sinon.match.func);
-			expect(methodHelper.StaticMethodDescribeHelper).to.have.been.calledOnceWithExactly(Test);
+			expect(staticMethodHelper.StaticMethodDescribeHelper).to.have.been.calledOnceWithExactly(Test);
 			expect(createStaticDescribe).to.have.been.calledOnceWithExactly();
 			expect(fn).to.have.been.calledOnceWithExactly('createStaticDescribe result');
 			expect(result).to.be.undefined;
@@ -81,7 +65,7 @@ describe('index.ts', () => {
 
 		beforeEach(() => {
 			createStaticDescribe = sinon.stub().returns('createStaticDescribe result' as any);
-			sinon.stub(methodHelper, 'StaticMethodDescribeHelper').returns({ createStaticDescribe });
+			sinon.stub(staticMethodHelper, 'StaticMethodDescribeHelper').returns({ createStaticDescribe });
 			fn = sinon.stub();
 			suite = sinon.stub().callsFake((_description, callback) => callback());
 		});
@@ -92,7 +76,7 @@ describe('index.ts', () => {
 			const result = describer(Test, 'describe description', fn);
 
 			expect(suite).to.have.been.calledOnceWithExactly('describe description', sinon.match.func);
-			expect(methodHelper.StaticMethodDescribeHelper).to.have.been.calledOnceWithExactly(Test);
+			expect(staticMethodHelper.StaticMethodDescribeHelper).to.have.been.calledOnceWithExactly(Test);
 			expect(createStaticDescribe).to.have.been.calledOnceWithExactly();
 			expect(fn).to.have.been.calledOnceWithExactly('createStaticDescribe result');
 			expect(result).to.be.undefined;
