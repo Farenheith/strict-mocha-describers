@@ -5,6 +5,6 @@ scripts:
   - npm install codecov -g
   - npm run lint
   - npm run build
-  - npm run test:coverage:json
+  - npm run test:coverage:lcovonly
 after_success:
   - codecov
