@@ -23,14 +23,18 @@ export const testUtils = {
 	getMockableMethods<T>(subjects: T[], service: T, methodToTest: keyof T | undefined) {
 		const methods: Array<keyof T> = [];
 		for (const subject of subjects) {
-			for (const key of Object.getOwnPropertyNames(subject) as Array<keyof T>) {
-				if (testUtils.isMockable<T>(key, subject, service, methodToTest)) {
-					methods.push(key);
-				}
-			}
+			testUtils.getSubjectMockableMethods<T>(subject, service, methodToTest, methods);
 		}
 
 		return methods;
+	},
+
+	getSubjectMockableMethods<T>(subject: T, service: T, methodToTest: keyof T | undefined, methods: Array<keyof T>) {
+		for (const key of Object.getOwnPropertyNames(subject) as Array<keyof T>) {
+			if (testUtils.isMockable<T>(key, subject, service, methodToTest)) {
+				methods.push(key);
+			}
+		}
 	},
 
 	createBackup<T>(methods: Array<keyof T>, backup: Array<MethodBackup<T>>, service: T) {
