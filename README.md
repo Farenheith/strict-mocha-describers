@@ -2,7 +2,7 @@
 [![Build Status](https://travis-ci.com/Farenheith/strict-mocha-describers.svg?branch=master)](https://travis-ci.com/Farenheith/strict-mocha-describers)
 [![codecov](https://codecov.io/gh/Farenheith/strict-mocha-describers/branch/master/graph/badge.svg)](https://codecov.io/gh/Farenheith/strict-mocha-describers)
 [![Maintainability](https://api.codeclimate.com/v1/badges/765901ef4f0f52b07647/maintainability)](https://codeclimate.com/github/Farenheith/strict-mocha-describers/maintainability)
-![](https://david-dm.org/Farenheith/strict-mocha-describers.svg)
+[![Packages](https://david-dm.org/Farenheith/strict-mocha-describers.svg)](https://david-dm.org/Farenheith/strict-mocha-describers)
 [![npm version](https://badge.fury.io/js/strict-mocha-describers.svg)](https://badge.fury.io/js/strict-mocha-describers)
 
 This project implements over mocha strictly describers for creation of suite tests of classes.
