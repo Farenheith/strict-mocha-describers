@@ -15,7 +15,7 @@ export class MethodDescribeHelper<Target, Class extends ClassOf<Target>> extends
 	}
 
 	private createMethodDescribe = (suite: (title: string, fn: () => void) => void) => {
-		return (method: keyof Target,
+		const result = ((method: keyof Target,
 			fn: (
 					it: MethodTestFunction<Target>,
 					getTarget: () => Target,
@@ -31,7 +31,9 @@ export class MethodDescribeHelper<Target, Class extends ClassOf<Target>> extends
 
 				afterEach(itHelper.afterEach);
 			});
-		}
+		}) as MethodSuite<Target, Class>;
+		result.static = this.createStaticDescribe();
+		return result;
 	}
 
 	createDescribe() {

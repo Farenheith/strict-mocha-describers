@@ -1,14 +1,8 @@
 import * as ItHelper from './../src/it-helper';
-import { backupHelper } from '../src/backup-helper';
 import { testUtils } from '../src/test-utils';
-import * as methodHelper from '../src/method-describe-helper';
 import { expect } from 'chai';
-import * as getFake from '../src/get-fake';
-import * as strictDescribeClass from '../src/strict-describe-class';
-import * as sinon from 'sinon';
-import { StaticMethodDescribeHelper } from '../src/static-method-describe-helper';
+import sinon = require('sinon');
 import * as mocha from 'mocha';
-import { MethodBackup } from '../src/types/method-backup';
 import { MethodDescribeHelper } from '../src/method-describe-helper';
 
 class Test {
@@ -29,6 +23,7 @@ describe('MethodDescribeHelper', () => {
 		let fn: sinon.SinonStub;
 		let targetInstance: Test | undefined;
 		let createIt: sinon.SinonStub;
+		let createStaticDescribe: sinon.SinonStub<any, any>;
 		const itHelperBeforeEach: any = 'beforeEachCallback';
 		const itHelperAfterEach: any = 'afterEachCallback';
 
@@ -39,6 +34,8 @@ describe('MethodDescribeHelper', () => {
 			sinon.stub(mocha, 'beforeEach');
 			sinon.stub(mocha, 'afterEach');
 			createIt = sinon.stub().returns('createIt result');
+			createStaticDescribe = sinon.stub(target, 'createStaticDescribe')
+				.returns('createStaticDescribe result' as any);
 			sinon.stub(ItHelper, 'ItHelper').returns({
 				createIt, beforeEach: itHelperBeforeEach, afterEach: itHelperAfterEach,
 				target: instance,
@@ -56,6 +53,7 @@ describe('MethodDescribeHelper', () => {
 			expect(mocha.afterEach).to.have.been.calledOnceWithExactly('afterEachCallback');
 			expect(result).to.be.undefined;
 			expect(targetInstance).to.be.eq(instance);
+			expect(describer.static).to.be.eq('createStaticDescribe result');
 		});
 	});
 
