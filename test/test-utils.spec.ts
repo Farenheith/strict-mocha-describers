@@ -1,7 +1,5 @@
 import { testUtils } from './../src/test-utils';
-import * as mocha from 'mocha';
 import * as sinon from 'sinon';
-import { beforeEach, it } from 'mocha';
 
 import { expect } from 'chai';
 class Test {
@@ -116,26 +114,26 @@ describe('testUtils', () => {
 
 		beforeEach(() => {
 			service = sinon.stub().returns(test);
-			sinon.stub(mocha, 'beforeEach').callsFake(x => (x as any)());
+			sinon.stub(global, 'beforeEach').callsFake(x => (x as any)());
 			callback = sinon.stub();
 			sinon.stub(testUtils, 'prepare').returns([
 			['test1', 'value1'],
 				['test2', 'value2'],
 			] as any);
-			sinon.stub(mocha, 'afterEach').callsFake(x => (x as any)());
+			sinon.stub(global, 'afterEach').callsFake(x => (x as any)());
 		});
 
 		it('should mount a test describer correctly', () => {
 			const result = testUtils.mountInstanceTest(
 				service, Test, 'method1', callback);
 
-			expect(mocha.beforeEach).calledOnceWithExactly(sinon.match.func);
+			expect(global.beforeEach).calledOnceWithExactly(sinon.match.func);
 			expect(service).calledOnceWithExactly();
 			expect(testUtils.prepare).calledTwice
 				.calledWithExactly(test, Test.prototype, 'method1')
 				.calledWithExactly(Test, Test);
 			expect(callback).calledOnceWithExactly();
-			expect(mocha.afterEach).calledOnceWithExactly(sinon.match.func);
+			expect(global.afterEach).calledOnceWithExactly(sinon.match.func);
 			expect(result).eq(undefined);
 			expect((test as any).test1).eq('value1');
 			expect((test as any).test2).eq('value2');
@@ -146,13 +144,13 @@ describe('testUtils', () => {
 		let callback: sinon.SinonStub;
 
 		beforeEach(() => {
-			sinon.stub(mocha, 'beforeEach').callsFake(x => (x as any)());
+			sinon.stub(global, 'beforeEach').callsFake(x => (x as any)());
 			callback = sinon.stub();
 			sinon.stub(testUtils, 'prepare').returns([
 			['test1', 'value1'],
 				['test2', 'value2'],
 			] as any);
-			sinon.stub(mocha, 'afterEach').callsFake(x => (x as any)());
+			sinon.stub(global, 'afterEach').callsFake(x => (x as any)());
 		});
 
 		it('should mount a test describer correctly', () => {
@@ -160,11 +158,11 @@ describe('testUtils', () => {
 				Test, 'staticMethod1', callback
 			);
 
-			expect(mocha.beforeEach).calledOnceWithExactly(sinon.match.func);
+			expect(global.beforeEach).calledOnceWithExactly(sinon.match.func);
 			expect(testUtils.prepare)
 				.calledOnceWithExactly(Test, Test, 'staticMethod1');
 			expect(callback).calledOnceWithExactly();
-			expect(mocha.afterEach).calledOnceWithExactly(sinon.match.func);
+			expect(global.afterEach).calledOnceWithExactly(sinon.match.func);
 			expect(result).eq(undefined);
 			expect((Test as any).test1).eq('value1');
 			expect((Test as any).test2).eq('value2');

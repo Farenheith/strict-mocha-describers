@@ -1,5 +1,4 @@
 import { ClassOf } from "./types/class-of";
-import { beforeEach, afterEach } from 'mocha';
 import { testUtils } from './test-utils';
 
 let cleanups: Function[] | undefined;

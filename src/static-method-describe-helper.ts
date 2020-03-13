@@ -2,7 +2,6 @@ import { TestFunction } from "mocha";
 import { testUtils } from "./test-utils";
 import { StaticMethodSuite } from "./types/static-method-suite";
 import { backupHelper } from "./backup-helper";
-import { beforeEach, afterEach, it } from 'mocha';
 
 export class StaticMethodDescribeHelper<Class> {
 	constructor(protected readonly cls: Class) { }

@@ -1,6 +1,5 @@
 import { BaseMochaType } from './types/base-mocha-function';
 import { MethodBackup } from "./types/method-backup";
-import * as mocha from 'mocha';
 import { ClassOf } from "./types/class-of";
 
 export const testUtils = {
@@ -47,12 +46,12 @@ export const testUtils = {
 	mountStaticTest<T>(cls: T, methodName: keyof T, callback: () => void | PromiseLike<void>) {
 		let backup: Array<MethodBackup<T>>;
 		let target: T;
-		mocha.beforeEach(() => {
+		beforeEach(() => {
 			target = cls;
 			backup = testUtils.prepare(target, cls, methodName);
 		});
 		callback();
-		mocha.afterEach(() => {
+		afterEach(() => {
 			testUtils.restoreBackup<T>(backup, target);
 		});
 	},
@@ -61,13 +60,13 @@ export const testUtils = {
 		let backup: Array<MethodBackup<T>>;
 		let staticBackup: Array<MethodBackup<Class>>;
 		let target: T;
-		mocha.beforeEach(() => {
+		beforeEach(() => {
 			target = service();
 			backup = testUtils.prepare(target, cls.prototype, methodName);
 			staticBackup = testUtils.prepare(cls, cls);
 		});
 		callback();
-		mocha.afterEach(() => {
+		afterEach(() => {
 			testUtils.restoreBackup<T>(backup, target);
 			testUtils.restoreBackup<Class>(staticBackup, cls);
 		});

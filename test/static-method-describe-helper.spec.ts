@@ -3,7 +3,6 @@ import { testUtils } from './../src/test-utils';
 import { expect } from 'chai';
 import * as sinon from 'sinon';
 import { StaticMethodDescribeHelper } from '../src/static-method-describe-helper';
-import * as mocha from 'mocha';
 import { MethodBackup } from '../src/types/method-backup';
 
 class Test {
@@ -24,8 +23,8 @@ describe('StaticMethodDescribeHelper', () => {
 		beforeEach(() => {
 			suite = sinon.stub().callsFake((_description, callback) => callback());
 			fn = sinon.stub();
-			sinon.stub(mocha, 'beforeEach');
-			sinon.stub(mocha, 'afterEach');
+			sinon.stub(global, 'beforeEach');
+			sinon.stub(global, 'afterEach');
 			sinon.stub(target, 'getBeforeEach' as any).returns('getBeforeEach result');
 			sinon.stub(target, 'getAfterEach' as any).returns('getAfterEach result');
 		});
@@ -37,10 +36,10 @@ describe('StaticMethodDescribeHelper', () => {
 
 			expect(suite).to.have.been.calledOnceWithExactly('Static method method1', sinon.match.func);
 			expect(target['getBeforeEach']).to.have.been.calledOnceWithExactly({ }, 'method1');
-			expect(mocha.beforeEach).to.have.been.calledOnceWithExactly('getBeforeEach result');
+			expect(global.beforeEach).to.have.been.calledOnceWithExactly('getBeforeEach result');
 			expect(fn).to.have.been.calledOnceWithExactly(it);
 			expect(target['getAfterEach']).to.have.been.calledOnceWithExactly({ });
-			expect(mocha.afterEach).to.have.been.calledOnceWithExactly('getAfterEach result');
+			expect(global.afterEach).to.have.been.calledOnceWithExactly('getAfterEach result');
 			expect(result).to.be.undefined;
 		});
 	});

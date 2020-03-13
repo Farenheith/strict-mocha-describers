@@ -1,7 +1,6 @@
 import { testUtils } from './test-utils';
 import { DescribeStaticClass } from './types/describe-static-class';
 import { DescribeClass } from './types/describe-class';
-import { describe } from 'mocha';
 import { MethodDescribeHelper } from './method-describe-helper';
 import { StaticMethodDescribeHelper } from "./static-method-describe-helper";
 import { StaticMethodSuite } from "./types/static-method-suite";
