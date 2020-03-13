@@ -9,7 +9,7 @@
     "lib": "src"
   },
   "files": [
-    "build/**/*"
+    "build"
   ],
   "scripts": {
     "lint": "run-lint",
@@ -17,9 +17,9 @@
     "build": "run-build",
     "test:coverage": "run-test-coverage",
     "test:coverage:lcovonly": "run-test-lcov",
-		"test": "run-test",
-		"prepublish": "npm run lint && npm run test:coverage && npm run build"
-  },
+    "test": "run-test",
+    "prepublish": "npm run build"
+	},
   "repository": {
     "type": "git",
     "url": "git+https://github.com/Farenheith/strict-mocha-describers.git"
@@ -32,10 +32,10 @@
   "homepage": "https://github.com/Farenheith/strict-mocha-describers#readme",
   "devDependencies": {
     "@types/sinon-chai": "^3.2.3",
-    "base-project-config": "^1.2.6",
-    "sinon-chai": "^3.3.0"
+    "sinon-chai": "^3.5.0"
   },
   "dependencies": {
-    "mocha": "^6.2.2"
+    "base-project-config": "^2.0.8",
+    "mocha": "^7.1.0"
   }
 }
