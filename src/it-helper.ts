@@ -1,9 +1,10 @@
 import { ClassOf } from './types/class-of';
 import { testUtils } from './test-utils';
-import { it as mochaIt } from "mocha";
 import { MethodTestFunction } from "./types/method-test-function";
 import { backupHelper } from './backup-helper';
 import { MethodBackup } from './types/method-backup';
+
+const mochaIt = global.it;
 
 export class ItHelper<Target, Class extends ClassOf<Target>> {
 	target!: Target;

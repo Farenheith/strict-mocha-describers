@@ -2,12 +2,13 @@ import * as ItHelper from './../src/it-helper';
 import { testUtils } from '../src/test-utils';
 import { expect } from 'chai';
 import sinon = require('sinon');
-import * as mocha from 'mocha';
 import { MethodDescribeHelper } from '../src/method-describe-helper';
 
 class Test {
 	method1() { }
 }
+
+const beforeEach = global.beforeEach;
 
 describe('MethodDescribeHelper', () => {
 	let target: MethodDescribeHelper<Test, typeof Test>;
@@ -31,8 +32,8 @@ describe('MethodDescribeHelper', () => {
 			targetInstance = undefined;
 			suite = sinon.stub().callsFake((_description, callback) => callback());
 			fn = sinon.stub().callsFake((_it, getTarget) => targetInstance = getTarget());
-			sinon.stub(mocha, 'beforeEach');
-			sinon.stub(mocha, 'afterEach');
+			sinon.stub(global, 'beforeEach');
+			sinon.stub(global, 'afterEach');
 			createIt = sinon.stub().returns('createIt result');
 			createStaticDescribe = sinon.stub(target, 'createStaticDescribe')
 				.returns('createStaticDescribe result' as any);
@@ -48,9 +49,9 @@ describe('MethodDescribeHelper', () => {
 			const result = describer('method1', fn);
 
 			expect(suite).to.have.been.calledOnceWithExactly('Method method1', sinon.match.func);
-			expect(mocha.beforeEach).to.have.been.calledOnceWithExactly('beforeEachCallback');
+			expect(global.beforeEach).to.have.been.calledOnce.calledOnceWithExactly('beforeEachCallback');
 			expect(fn).to.have.been.calledOnceWithExactly('createIt result', sinon.match.func);
-			expect(mocha.afterEach).to.have.been.calledOnceWithExactly('afterEachCallback');
+			expect(global.afterEach).to.have.been.calledOnceWithExactly('afterEachCallback');
 			expect(result).to.be.undefined;
 			expect(targetInstance).to.be.eq(instance);
 			expect(describer.static).to.be.eq('createStaticDescribe result');

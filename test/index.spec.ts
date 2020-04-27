@@ -1,5 +1,4 @@
 import { expect } from 'chai';
-import { afterEach } from 'mocha';
 
 describe('index.ts', () => {
 	afterEach(() => {

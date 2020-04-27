@@ -1,4 +1,3 @@
-import { beforeEach, afterEach } from 'mocha';
 import { MethodTestFunction } from "./types/method-test-function";
 import { testUtils } from "./test-utils";
 import { ClassOf } from "./types/class-of";
@@ -25,11 +24,11 @@ export class MethodDescribeHelper<Target, Class extends ClassOf<Target>> extends
 			const it = itHelper.createIt();
 
 			suite(`Method ${method}`, () => {
-				beforeEach(itHelper.beforeEach);
+				global.beforeEach(itHelper.beforeEach);
 
 				fn(it, () => itHelper.target);
 
-				afterEach(itHelper.afterEach);
+				global.afterEach(itHelper.afterEach);
 			});
 		}) as MethodSuite<Target, Class>;
 		result.static = this.createStaticDescribe();
