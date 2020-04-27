@@ -11,7 +11,7 @@
 				"cwd": "${workspaceRoot}",
 				"runtimeArgs": ["-r", "ts-node/register"],
 				"args": [
-									"${workspaceRoot}/src/strict-mocha-describers.ts"
+									"${workspaceRoot}/src/index.ts"
 							]
 			},
 			{

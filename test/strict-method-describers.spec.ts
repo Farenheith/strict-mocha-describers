@@ -8,6 +8,8 @@ describe('strict-method-describers.ts', () => {
 
 		expect(target).to.be.eql({
 			...getFake,
+			dummy: getFake.getFakeInstance,
+			staticDummy: getFake.fakeStaticClass,
 			...{
 				describeClass: strictDescribeClass.describeClass,
 				describeStaticClass: strictDescribeClass.describeStaticClass,
