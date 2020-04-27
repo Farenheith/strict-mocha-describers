@@ -1,6 +1,6 @@
 {
   "name": "strict-mocha-describers",
-  "version": "2.1.0",
+  "version": "2.1.1",
   "description": "The implementation of describers strongly oriented to the methods that will be tested",
   "main": "build/strict-mocha-describers.js",
   "directories": {
