@@ -1,8 +1,8 @@
 import { testUtils } from './../src/test-utils';
-import { ItHelper } from "../src/it-helper";
 import * as sinon from 'sinon';
 import { expect } from "chai";
 import { backupHelper } from '../src/backup-helper';
+import { ItHelper } from "../src/it-helper";
 
 class Test {
 	method1() { }
@@ -48,7 +48,7 @@ describe('ItHelper', () => {
 		it('should setup it function properly', () => {
 			const result = target.createIt();
 
-			expect(testUtils.setupFunction).to.have.been.calledOnceWithExactly(target['createSuiteCase'], it);
+			expect(testUtils.setupFunction).to.have.been.calledOnceWithExactly(target['createSuiteCase'], global.it);
 			expect(result).to.be.eq('setupFunction result');
 			expect(bootstrap).to.have.not.been.called;
 		});

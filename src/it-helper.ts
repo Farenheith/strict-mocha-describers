@@ -4,8 +4,6 @@ import { MethodTestFunction } from "./types/method-test-function";
 import { backupHelper } from './backup-helper';
 import { MethodBackup } from './types/method-backup';
 
-const mochaIt = global.it;
-
 export class ItHelper<Target, Class extends ClassOf<Target>> {
 	target!: Target;
 	private backup!: Array<MethodBackup<Target>>;
@@ -26,7 +24,7 @@ export class ItHelper<Target, Class extends ClassOf<Target>> {
 	}
 
 	createIt() {
-		return testUtils.setupFunction(this.createSuiteCase, mochaIt) as MethodTestFunction<Target>;
+		return testUtils.setupFunction(this.createSuiteCase, global.it) as MethodTestFunction<Target>;
 	}
 
 	private backupInstance(method: keyof Target) {
