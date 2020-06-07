@@ -1,4 +1,4 @@
-import { TestFunction } from "mocha";
+import { TestFunction } from 'mocha';
 export interface BaseStaticMethodSuite<Class> {
-	(methodName: keyof Class, fn: (it: TestFunction) => void): void;
+  (methodName: keyof Class, fn: (it: TestFunction) => void): void;
 }

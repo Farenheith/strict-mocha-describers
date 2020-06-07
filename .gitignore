@@ -61,4 +61,6 @@ typings/
 .next
 
 build
+bin
+dist
 .npmrc

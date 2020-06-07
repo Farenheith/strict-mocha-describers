@@ -1,4 +1,11 @@
-import * as chai from 'chai';
-import * as sinonChai from 'sinon-chai';
+import 'reflect-metadata';
+import { restore } from 'sinon';
+import sinonChai = require('sinon-chai');
+import { use } from 'chai';
+import { callsLike } from 'sinon-chai-calls-assertion';
+use(sinonChai);
+use(callsLike);
 
-chai.use(sinonChai);
+beforeEach(() => {
+  restore();
+});

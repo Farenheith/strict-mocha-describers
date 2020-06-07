@@ -2,55 +2,57 @@ import { testUtils } from './test-utils';
 import { DescribeStaticClass } from './types/describe-static-class';
 import { DescribeClass } from './types/describe-class';
 import { MethodDescribeHelper } from './method-describe-helper';
-import { StaticMethodDescribeHelper } from "./static-method-describe-helper";
-import { StaticMethodSuite } from "./types/static-method-suite";
-import { MethodSuite } from "./types/method-suite";
+import { StaticMethodDescribeHelper } from './static-method-describe-helper';
+import { StaticMethodSuite } from './types/static-method-suite';
+import { MethodSuite } from './types/method-suite';
 import { ClassOf } from './types/class-of';
 import { DescribeStruct } from './types/describe-struct';
 
 export function mountClassDescribe(
-	suite: (description: string, fn: () => void) => void,
+  suite: (description: string, fn: () => void) => void,
 ) {
-	return <Target, Class extends ClassOf<Target>>(cls: Class,
-		bootStrap: () => Target,
-		fn: (describe: MethodSuite<Target, Class>) => void) => {
-		const methodDescribeHelper = new MethodDescribeHelper(bootStrap, cls);
+  return <Target, Class extends ClassOf<Target>>(
+    cls: Class,
+    bootStrap: () => Target,
+    fn: (describe: MethodSuite<Target, Class>) => void,
+  ) => {
+    const methodDescribeHelper = new MethodDescribeHelper(bootStrap, cls);
 
-		suite(`class ${cls.name}`, () => {
-			fn(methodDescribeHelper.createDescribe());
-		});
-	};
+    suite(`class ${cls.name}`, () => {
+      fn(methodDescribeHelper.createDescribe());
+    });
+  };
 }
 
 export function mountSructDescribe(
-	suite: (description: string, fn: () => void) => void,
+  suite: (description: string, fn: () => void) => void,
 ) {
-	return <Target>(
-		cls: Target,
-		description: string,
-		fn: (describe: StaticMethodSuite<Target>) => void,
-	) => {
-		const methodDescribeHelper = new StaticMethodDescribeHelper(cls);
+  return <Target>(
+    cls: Target,
+    description: string,
+    fn: (describe: StaticMethodSuite<Target>) => void,
+  ) => {
+    const methodDescribeHelper = new StaticMethodDescribeHelper(cls);
 
-		suite(description, () => {
-			fn(methodDescribeHelper.createStaticDescribe());
-		});
-	};
+    suite(description, () => {
+      fn(methodDescribeHelper.createStaticDescribe());
+    });
+  };
 }
 
 export function mountStaticClassDescribe(
-	suite: (description: string, fn: () => void) => void,
+  suite: (description: string, fn: () => void) => void,
 ) {
-	return <Target, Class extends ClassOf<Target>>(
-		cls: Class,
-		fn: (describe: StaticMethodSuite<Class>) => void,
-	) => {
-		const methodDescribeHelper = new StaticMethodDescribeHelper(cls);
+  return <Target, Class extends ClassOf<Target>>(
+    cls: Class,
+    fn: (describe: StaticMethodSuite<Class>) => void,
+  ) => {
+    const methodDescribeHelper = new StaticMethodDescribeHelper(cls);
 
-		suite(`static class ${cls.name}`, () => {
-			fn(methodDescribeHelper.createStaticDescribe());
-		});
-	};
+    suite(`static class ${cls.name}`, () => {
+      fn(methodDescribeHelper.createStaticDescribe());
+    });
+  };
 }
 
 /**
@@ -71,7 +73,16 @@ export function mountStaticClassDescribe(
  * will throw an error. This behavior helps to eliminate scope invasion during the tests, and you're assured that no other code
  * other than the method being tested will run.
  */
-export const describeStaticClass = testUtils.setupFunction(mountStaticClassDescribe, describe) as DescribeStaticClass;
-export const describeClass = testUtils.setupFunction(mountClassDescribe, describe) as DescribeClass;
+export const describeStaticClass = testUtils.setupFunction(
+  mountStaticClassDescribe,
+  describe,
+) as DescribeStaticClass;
+export const describeClass = testUtils.setupFunction(
+  mountClassDescribe,
+  describe,
+) as DescribeClass;
 describeClass.static = describeStaticClass;
-export const describeStruct = testUtils.setupFunction(mountSructDescribe, describe) as DescribeStruct;
+export const describeStruct = testUtils.setupFunction(
+  mountSructDescribe,
+  describe,
+) as DescribeStruct;
