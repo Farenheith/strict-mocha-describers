@@ -50,6 +50,6 @@
     "sinon-chai": "^3.5.0"
   },
   "dependencies": {
-    "mocha": "^7.1.2"
+    "mocha": "^8.2.0"
   }
 }
